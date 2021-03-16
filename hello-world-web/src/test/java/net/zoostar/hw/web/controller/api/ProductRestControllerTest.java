@@ -1,4 +1,4 @@
-package net.zoostar.hw.web.api;
+package net.zoostar.hw.web.controller.api;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,37 +66,43 @@ class ProductRestControllerTest {
 				new ProductServiceImpl(repository));
 	}
 	
-//	@Test
-//	void testCreate() {
-//		//GIVEN {Page}
-//		Integer number = 1;
-//		Integer limit = 3;
-//		
-//		//WHEN
-//		List<Product> products = new ArrayList<>(limit);
-//		int id = 0;
-//		products.add(createNewProduct("sku" + ++id, "source" + id, "sourceId" + id, "KIT", 1, ""));
-//		products.add(createNewProduct("sku" + ++id, "source" + id, "sourceId" + id, "KIT", 1, ""));
-//		products.add(createNewProduct("sku" + ++id, "source" + id, "sourceId" + id, "KIT", 1, ""));
-//		Page<Product> page = new PageImpl<>(products);
-//		Mockito.when(controller.getRepository().saveAll(newProducts(limit))).thenReturn(savedProducts());
-//		
-//		//THEN
-//		ResponseEntity<Page<Product>> actualResponse = controller.retrieve(number, limit);
-//		assertNotNull(actualResponse);
-//		page = actualResponse.getBody();
-//		products = page.getContent();
-//		id = 0;
-//		for(Product actualProduct : products) {
-//			assertNotNull(actualProduct);
-//			log.info("Retrieved product: {}", actualProduct);
-//			assertEquals(String.valueOf(++id), actualProduct.getId());
-//			assertFalse(actualProduct.isNew());
-//			Product expectedProduct = createNewProduct(String.valueOf(id), "sku" + id, "source" + id, "sourceId" + id, "KIT", 1, "");
-//			assertTrue(expectedProduct.equals(actualProduct));
-//			assertTrue(expectedProduct.hashCode() == actualProduct.hashCode());
-//		}
-//	}
+	@Test
+	void testCreate() {
+		//GIVEN
+		String id = UUID.randomUUID().toString();
+		Product product = productKey("assetId1", "sku1", "MDM");
+		
+		//WHEN
+		Mockito.when(controller.getProductManager().getRepository().save(product)).
+				thenReturn(savedProduct(id, product));
+		
+		//THEN
+		ResponseEntity<Product> actualResponse = controller.create(product);
+		assertNotNull(actualResponse);
+		Product entity = actualResponse.getBody();
+		assertNotNull(entity);
+		log.info("Retrieved product: {}", entity);
+		assertEquals(id, entity.getId());
+		assertFalse(entity.isNew());
+	}
+
+	protected Product savedProduct(String id, Product product) {
+		Product entity = productKey(product.getAssetId(), product.getSku(), product.getSource());
+		entity.setId(id);
+		return entity;
+	}
+
+	protected Product productKey(String assetId, String sku, String source) {
+		Product product = new Product();
+		product.setAssetId(assetId);
+		product.setSku(sku);
+		product.setSource(source);
+		product.setDescription("This is a Product with assetID1, sku1 and source MDM");
+		product.setItemCount(1);
+		product.setSourceId("mdm-source-1");
+		product.setType("KIT");
+		return product;
+	}
 
 	@Test
 	void testRetrieveFailureForInvalidPageNumber() throws JsonParseException, JsonMappingException, IOException {
@@ -162,7 +169,7 @@ class ProductRestControllerTest {
 			log.info("Retrieved product: {}", actualProduct);
 			assertEquals(id, actualProduct.getId());
 			assertTrue(StringUtils.isNotBlank(actualProduct.getId()));
-			Product expectedProduct = createExistingProduct(String.valueOf(id), "sku" + id, "MDM", "sourceId" + id, "KIT", 1, "");
+			Product expectedProduct = createExistingProduct(String.valueOf(id), "assetId" + id, "sku" + id, "MDM", "sourceId" + id, "KIT", 1, "");
 			assertEquals(expectedProduct, actualProduct);
 			assertEquals(expectedProduct.hashCode(), actualProduct.hashCode());
 		}
@@ -206,7 +213,7 @@ class ProductRestControllerTest {
 			log.info("Retrieved product: {}", actualProduct);
 			assertEquals(id, actualProduct.getId());
 			assertTrue(StringUtils.isNotBlank(actualProduct.getId()));
-			Product expectedProduct = createExistingProduct(String.valueOf(id), "sku" + id, "MDM", "sourceId" + id, "KIT", 1, "");
+			Product expectedProduct = createExistingProduct(String.valueOf(id), "assetId" + id, "sku" + id, "MDM", "sourceId" + id, "KIT", 1, "");
 			assertEquals(expectedProduct, actualProduct);
 			assertEquals(expectedProduct.hashCode(), actualProduct.hashCode());
 		}
@@ -215,6 +222,7 @@ class ProductRestControllerTest {
 	@Test
 	void testRetrieveProductByKey() throws JsonParseException, JsonMappingException, IOException {
 		//GIVEN {key}
+		String assetId = "assetId1";
 		String sku = "sku1";
 		String source = "MDM";
 		int firstPage = 0;
@@ -223,10 +231,10 @@ class ProductRestControllerTest {
 		
 		//WHEN
 		Mockito.when(controller.getProductManager().getRepository().
-				findBySkuAndSource(sku, source)).thenReturn(expectedProduct.get());
+				findByAssetIdAndSkuAndSource(assetId, sku, source)).thenReturn(expectedProduct.get());
 		
 		//THEN
-		ResponseEntity<Product> actualResponse = controller.retrieveProduct(sku, source);
+		ResponseEntity<Product> actualResponse = controller.retrieveProduct(assetId, sku, source);
 		assertNotNull(actualResponse);
 		log.info("Response: {}", actualResponse);
 		
@@ -248,18 +256,19 @@ class ProductRestControllerTest {
 		return new PageImpl<>(totalProducts.subList(from, to), page, totalProducts.size());
 	}
 
-	protected Product createExistingProduct(String id, String sku,
-			String source, String sourceId, String type,
+	protected Product createExistingProduct(String id, String assetId,
+			String sku,	String source, String sourceId, String type,
 			int itemCount, String description) {
-		Product product = createNewProduct(sku, source, sourceId, type, itemCount, description);
+		Product product = createNewProduct(assetId, sku, source, sourceId, type, itemCount, description);
 		product.setId(id);
 		return product;
 	}
 	
-	protected Product createNewProduct(String sku,
+	protected Product createNewProduct(String assetId, String sku,
 			String source, String sourceId, String type,
 			int itemCount, String description) {
 		Product product = new Product();
+		product.setAssetId(assetId);
 		product.setSku(sku);
 		product.setSource(source);
 		product.setSourceId(sourceId);
