@@ -1,0 +1,101 @@
+[
+  {
+    "id": "1",
+    "sourceId": "sourceId1",
+    "source": "MDM",
+    "sku": "sku1",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  },
+  {
+    "id": "2",
+    "sourceId": "sourceId2",
+    "source": "MDM",
+    "sku": "sku2",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  },
+  {
+    "id": "3",
+    "sourceId": "sourceId3",
+    "source": "MDM",
+    "sku": "sku3",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  },
+  {
+    "id": "4",
+    "sourceId": "sourceId4",
+    "source": "MDM",
+    "sku": "sku4",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  },
+  {
+    "id": "5",
+    "sourceId": "sourceId5",
+    "source": "MDM",
+    "sku": "sku5",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  },
+  {
+    "id": "6",
+    "sourceId": "sourceId6",
+    "source": "MDM",
+    "sku": "sku6",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  },
+  {
+    "id": "7",
+    "sourceId": "sourceId7",
+    "source": "MDM",
+    "sku": "sku7",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  },
+  {
+    "id": "8",
+    "sourceId": "sourceId8",
+    "source": "MDM",
+    "sku": "sku8",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  },
+  {
+    "id": "9",
+    "sourceId": "sourceId9",
+    "source": "MDM",
+    "sku": "sku9",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  },
+  {
+    "id": "10",
+    "sourceId": "sourceId10",
+    "source": "MDM",
+    "sku": "sku10",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  },
+  {
+    "id": "11",
+    "sourceId": "sourceId11",
+    "source": "MDM",
+    "sku": "sku11",
+    "type": "KIT",
+    "description": "",
+    "itemCount": 1
+  }
+]
