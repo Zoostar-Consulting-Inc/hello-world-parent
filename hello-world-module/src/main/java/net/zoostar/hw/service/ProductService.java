@@ -7,5 +7,5 @@ import net.zoostar.hw.model.Product;
 public interface ProductService extends CrudService<Product, String> {
 	void setRepository(ProductRepository repository);
 	ProductRepository getRepository();
-	Product retrieve(String sku, String source) throws EntityNotFoundException;
+	Product retrieve(String assetId, String sku, String source) throws EntityNotFoundException;
 }

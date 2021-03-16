@@ -2,7 +2,6 @@ package net.zoostar.hw.service.impl;
 
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,12 +34,24 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Product create(Product entity) throws EntityAlreadyExistsException {
-		log.info("Creating entity: {}...", entity);
-		if(StringUtils.isNotBlank(entity.getId())) {
-			throw new EntityAlreadyExistsException(entity);
+	public Product create(Product product) throws EntityAlreadyExistsException {
+		log.info("Creating entity: {}...", product);
+		Product entity = null;
+		
+		if(!product.isNew()) {
+			throw new EntityAlreadyExistsException(product);
 		}
-		return getRepository().save(entity);
+
+		try {
+			entity = retrieve(product.getAssetId(), product.getSku(), product.getSource());
+			if(entity != null) {
+				throw new EntityAlreadyExistsException(entity);
+			}
+		} catch (EntityNotFoundException e) {
+			entity = getRepository().save(product);
+		}
+
+		return entity;
 	}
 
 	@Override
@@ -79,9 +90,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Product retrieve(String sku, String source) throws EntityNotFoundException {
-		log.info("Retrieving Product for sku {} and source {}", sku, source);
-		Product product = getRepository().findBySkuAndSource(sku, source);
+	public Product retrieve(String assetId, String sku, String source) throws EntityNotFoundException {
+		log.info("Retrieving Product for assetId {}, sku {} and source {}", assetId, sku, source);
+		Product product = getRepository().findByAssetIdAndSkuAndSource(assetId, sku, source);
 		if(product == null) {
 			throw new EntityNotFoundException(String.format("No Product found for sku %s and source %s", sku, source));
 		}
