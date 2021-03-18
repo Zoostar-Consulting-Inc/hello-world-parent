@@ -14,8 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.zoostar.hw.exception.EntityAlreadyExistsException;
-import net.zoostar.hw.model.User;
+import net.zoostar.hw.exception.MissingRequiredFieldException;
 import net.zoostar.hw.service.UserService;
+import net.zoostar.hw.web.dto.User;
 
 @Slf4j
 @Getter
@@ -36,9 +37,16 @@ public class UserRestController {
 	public ResponseEntity<User> create(@RequestBody User user) {
 		ResponseEntity<User> response = null;
 		try {
-			response = new ResponseEntity<>(getUserManager().create(user), HttpStatus.OK);
+			net.zoostar.hw.model.User entity = new net.zoostar.hw.model.User(user.getEmail());
+			entity.setName(user.getName());
+			entity = getUserManager().create(entity);
+			log.info("Created new entity: {}", entity);
+			response = new ResponseEntity<>(user, HttpStatus.OK);
 		} catch (EntityAlreadyExistsException e) {
 			log.warn("{}: {}", e.getMessage(), e.getEntity());
+			response = new ResponseEntity<>(user, HttpStatus.EXPECTATION_FAILED);
+		} catch (MissingRequiredFieldException e) {
+			log.warn("{}", e.getMessage());
 			response = new ResponseEntity<>(user, HttpStatus.EXPECTATION_FAILED);
 		}
 		return response;

@@ -1,7 +1,6 @@
 package net.zoostar.hw.web.controller.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
@@ -66,46 +65,63 @@ class UserRestControllerTest {
 	void testCreateSuccess() throws JsonParseException, JsonMappingException, IOException {
 		//GIVEN
 		String id = UUID.randomUUID().toString();
-		User user = user(0, 1);
-		Mockito.when(controller.getUserManager().getRepository().save(user)).
-			thenReturn(savedEntity(id, user));
+		User entity = user(0, 1);
+		Mockito.when(controller.getUserManager().getRepository().save(entity)).
+			thenReturn(savedEntity(id, entity));
 
 		//WHEN
-		ResponseEntity<User> response = controller.create(user);
+		net.zoostar.hw.web.dto.User user = new net.zoostar.hw.web.dto.User();
+		user.setEmail(entity.getEmail());
+		user.setName(entity.getName());
+		ResponseEntity<net.zoostar.hw.web.dto.User> response = controller.create(user);
 		
 		//THEN
 		assertNotNull(response);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		User entity = response.getBody();
-		assertNotNull(entity);
-		log.info("Retrieved entity: {}", entity);
-		assertEquals(id, entity.getId());
-		assertFalse(entity.isNew());
-		assertEquals(user, entity);
-		assertEquals(user.hashCode(), entity.hashCode());
-		assertFalse(new User("random@email.com").equals(user));
+		user = response.getBody();
+		assertNotNull(user);
+		log.info("Retrieved entity: {}", user);
+		assertEquals(entity.getEmail(), user.getEmail());
+		assertEquals(entity.getName(), user.getName());
 	}
 
 	@Test
-	void testCreateWithExistingId() throws JsonParseException, JsonMappingException, IOException {
-		//GIVEN
-		String id = UUID.randomUUID().toString();
-		User user = user(0, 1);
-		user.setId(id);
-
+	void testCreateWithBlankEmail() throws JsonParseException, JsonMappingException, IOException {
 		//WHEN
-		ResponseEntity<User> response = controller.create(user);
+		net.zoostar.hw.web.dto.User user = new net.zoostar.hw.web.dto.User();
+		ResponseEntity<net.zoostar.hw.web.dto.User> response = controller.create(user);
 		
 		//THEN
 		assertNotNull(response);
 		assertEquals(HttpStatus.EXPECTATION_FAILED, response.getStatusCode());
-		User entity = response.getBody();
-		assertNotNull(entity);
-		log.info("Retrieved entity: {}", entity);
-		assertEquals(id, entity.getId());
-		assertFalse(entity.isNew());
-		assertEquals(user, entity);
-		assertEquals(user.hashCode(), entity.hashCode());
+		user = response.getBody();
+		assertNotNull(user);
+		log.info("Retrieved entity: {}", user);
+	}
+
+	@Test
+	void testCreateWithExistingEmail() throws JsonParseException, JsonMappingException, IOException {
+		//GIVEN
+		String id = UUID.randomUUID().toString();
+		User entity = user(0, 1);
+		entity.setId(id);
+		Mockito.when(controller.getUserManager().getRepository().findByEmail(entity.getEmail())).
+			thenReturn(savedEntity(id, entity));
+		
+		//WHEN
+		net.zoostar.hw.web.dto.User user = new net.zoostar.hw.web.dto.User();
+		user.setEmail(entity.getEmail());
+		user.setName(entity.getName());
+		ResponseEntity<net.zoostar.hw.web.dto.User> response = controller.create(user);
+		
+		//THEN
+		assertNotNull(response);
+		assertEquals(HttpStatus.EXPECTATION_FAILED, response.getStatusCode());
+		user = response.getBody();
+		assertNotNull(user);
+		log.info("Retrieved entity: {}", user);
+		assertEquals(entity.getEmail(), user.getEmail());
+		assertEquals(entity.getName(), user.getName());
 	}
 	
 	protected User user(int number, int limit) throws JsonParseException, JsonMappingException, IOException {

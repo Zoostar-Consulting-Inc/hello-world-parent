@@ -5,10 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import net.zoostar.hw.exception.EntityAlreadyExistsException;
 import net.zoostar.hw.exception.EntityNotFoundException;
+import net.zoostar.hw.exception.MissingRequiredFieldException;
 
 public interface CrudService<T, ID> {
 	PagingAndSortingRepository<T, ID> getRepository();
-	T create(T entity) throws EntityAlreadyExistsException;
+	T create(T entity) throws EntityAlreadyExistsException, MissingRequiredFieldException;
 	T retrieveById(ID id) throws EntityNotFoundException;
 	Page<T> retrieve(int number, int limit);
 	T update(T entity);
