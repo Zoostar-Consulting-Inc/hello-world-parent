@@ -11,14 +11,16 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @Entity
-public class Product implements Persistable<String> {
+public class User implements Persistable<String> {
 
 	@Id
 	@GeneratedValue(generator="uuid")
@@ -26,28 +28,23 @@ public class Product implements Persistable<String> {
 	private String id;
 	
 	@Column(nullable = false, length = 20)
-	private String sku;
-
-	@Column(nullable = false, length = 20)
-	private String assetId;
+	private String email;
 	
-	@Column(nullable = false, length = 20)
-	private String source;
+	@Column(nullable = true, length = 50)
+	private String name;
 	
-	@Column(nullable = false, length = 20)
-	private String sourceId;
+	public User(String email) {
+		this.email = email;
+	}
 	
-	@Column(nullable = false, length = 20)
-	private String type;
-	
-	@Column(nullable = true, length = 100)
-	private String description;
-	
-	private int itemCount;
+	@Override
+	public boolean isNew() {
+		return id == null;
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(assetId, sku, source);
+		return Objects.hash(email);
 	}
 
 	@Override
@@ -61,14 +58,8 @@ public class Product implements Persistable<String> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Product other = (Product) obj;
-		return Objects.equals(assetId, other.assetId) && Objects.equals(sku, other.sku)
-				&& Objects.equals(source, other.source);
-	}
-
-	@Override
-	public boolean isNew() {
-		return getId() == null;
+		User other = (User) obj;
+		return Objects.equals(email, other.email);
 	}
 
 }

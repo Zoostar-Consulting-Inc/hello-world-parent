@@ -13,6 +13,7 @@ public class EntityAlreadyExistsException extends Exception {
 	private transient final Object entity;
 	
 	public EntityAlreadyExistsException(Object entity) {
+		super("Entity already exists!");
 		this.entity = entity;
 	}
 }
