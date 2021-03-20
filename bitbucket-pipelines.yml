@@ -21,7 +21,7 @@ definitions:
         caches:
           - maven
         script:
-          - mvn -B install
+          - mvn -B verify
         artifacts:
           - target/**
 pipelines:
@@ -29,7 +29,7 @@ pipelines:
     - step: *build-test
   branches:
     master:
-      - step: *build-test
+      - step: *build-test-sonarcloud
   pull-requests:
     '**':
-      - step: *build-test
+      - step: *build-test-sonarcloud
