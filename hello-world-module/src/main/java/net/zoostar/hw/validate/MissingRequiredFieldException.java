@@ -1,6 +1,6 @@
-package net.zoostar.hw.exception;
+package net.zoostar.hw.validate;
 
-public class MissingRequiredFieldException extends Exception {
+public class MissingRequiredFieldException extends ValidatorException {
 
 	/**
 	 * 

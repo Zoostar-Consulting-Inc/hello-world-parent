@@ -2,61 +2,61 @@ package net.zoostar.hw.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.zoostar.hw.dao.hsql.UserRepository;
 import net.zoostar.hw.exception.EntityAlreadyExistsException;
 import net.zoostar.hw.exception.EntityNotFoundException;
-import net.zoostar.hw.exception.MissingRequiredFieldException;
 import net.zoostar.hw.model.User;
 import net.zoostar.hw.service.UserService;
+import net.zoostar.hw.validate.MissingRequiredFieldException;
+import net.zoostar.hw.validate.Validator;
+import net.zoostar.hw.validate.ValidatorException;
 
 @Slf4j
 @Getter
 @Setter
-@ToString
-@NoArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository repository;
 	
-	public UserServiceImpl(UserRepository repository) {
-		this.repository = repository;
-	}
-
 	@Override
 	@Transactional
-	public User create(User user) throws EntityAlreadyExistsException, MissingRequiredFieldException {
+	public User create(User user) throws EntityAlreadyExistsException, ValidatorException {
 		log.info("Creating entity: {}...", user);
-		User entity = null;
+		
+		Validator<User> validator = new Validator<>() {
+			@Override
+			public void validate(User user) throws ValidatorException {
+				log.info("{}...", "Validating user for required field: email");
+				log.info("...{}...", "validating");
+				if(!StringUtils.hasText(user.getEmail())) {
+					throw new MissingRequiredFieldException("Missing Required Field: email");
+				}
+				log.info("Validation passed. Email: {}", user.getEmail());
+			}
+		};
+		validator.validate(user);
 		
 		if(!user.isNew()) {
 			throw new EntityAlreadyExistsException(user);
-		}
-
-		if(!StringUtils.hasText(user.getEmail())) {
-			throw new MissingRequiredFieldException("Missing Required Field: email");
-		}
-		
-		try {
-			entity = retrieveByEmail(user.getEmail());
-			if(entity != null) {
-				throw new EntityAlreadyExistsException(entity);
+		} else {
+			try {
+				user = retrieveByEmail(user.getEmail());
+				throw new EntityAlreadyExistsException(user);
+			} catch (EntityNotFoundException e) {
+				user = getRepository().save(user);
 			}
-		} catch (EntityNotFoundException e) {
-			entity = getRepository().save(user);
 		}
-
-		return entity;
+		return user;
 	}
 
 	@Override
@@ -85,8 +85,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = true)
 	public Page<User> retrieve(int number, int limit) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("retrieve(number:{}, limit:{})", number, limit);
+		
+		if(number < 0)
+			throw new IllegalArgumentException("Page number may not be less than 0!");
+		
+		if(limit <= 0)
+			throw new IllegalArgumentException("Page size limit has to be greater than 0!");
+		
+		return getRepository().findAll(PageRequest.of(number, limit));
 	}
 
 	@Override
