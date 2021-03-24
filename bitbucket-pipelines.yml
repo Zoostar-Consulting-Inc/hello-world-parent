@@ -7,6 +7,9 @@
 
 image: maven:3.6.3-jdk-11
 
+clone:
+  depth: full    # SonarCloud scanner needs the full history to assign issues properly
+  
 pipelines:
   default:
     - parallel:
@@ -15,7 +18,7 @@ pipelines:
           caches:
             - maven
           script:
-            - mvn -B verify --file pom.xml
+            - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
           after-script:
               # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
             - pipe: atlassian/checkstyle-report:0.2.0
