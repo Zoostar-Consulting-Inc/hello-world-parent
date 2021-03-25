@@ -7,34 +7,8 @@
 
 image: maven:3.6.3-jdk-11
 
-clone:
-  depth: full    # SonarCloud scanner needs the full history to assign issues properly
-
 pipelines:
   default:
-    - parallel:
-      - step:
-          name: Build and Test
-          caches:
-            - maven
-          script:
-            - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-          after-script:
-              # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
-            - pipe: atlassian/checkstyle-report:0.2.0
-      - step:
-          name: Security Scan
-          script:
-            # Run a security scan for sensitive data.
-            # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
-            - pipe: atlassian/git-secrets-scan:0.4.3
-
-  branches:
-    release/*:
-      - step:
-        name: Build, Test and deploy to artifactory
-        caches:
-          - maven
-        script:
-          - echo "Build, Test and deploy to artifactory"
-      
+    - step:
+      script:
+        - echo "Hello World!"
