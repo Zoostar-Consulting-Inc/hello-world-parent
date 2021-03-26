@@ -62,4 +62,54 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+	    <snapshotRepository>
+	        <id>snapshots</id>
+<!-- 	        <name>a0z0gpgshkphc-artifactory-primary-0-snapshots</name> -->
+<!-- 	        <url>https://zoostar.jfrog.io/artifactory/maven-quickstart-local</url> -->
+        </snapshotRepository>
+	    <repository>
+	        <id>central</id>
+	        <name>a0z0gpgshkphc-artifactory-primary-0-releases</name>
+	        <url>https://zoostar.jfrog.io/artifactory/maven-quickstart-local</url>
+	    </repository>
+	</distributionManagement>
+<!-- 	<pluginRepositories> -->
+<!-- 		<pluginRepository> -->
+<!-- 			<id>zoostar-snapshot</id> -->
+<!-- 			<name>zoostar-libs-snapshot</name> -->
+<!-- 			<url>https://zoostar.jfrog.io/artifactory/zoostar-libs-snapshot</url> -->
+<!-- 			<snapshots /> -->
+<!-- 		</pluginRepository> -->
+<!-- 		<pluginRepository> -->
+<!-- 			<id>zoostar-release</id> -->
+<!-- 			<name>zoostar-libs-release</name> -->
+<!-- 			<url>https://zoostar.jfrog.io/artifactory/zoostar-libs-release</url> -->
+<!-- 			<snapshots> -->
+<!-- 				<enabled>false</enabled> -->
+<!-- 			</snapshots> -->
+<!-- 		</pluginRepository> -->
+<!-- 	</pluginRepositories> -->
+<!--     <repositories> -->
+<!--         <repository> -->
+<!--             <id>zoostar-snapshot</id> -->
+<!--             <url>https://zoostar.jfrog.io/artifactory/zoostar-libs-snapshot</url> -->
+<!--             <releases> -->
+<!--                 <enabled>false</enabled> -->
+<!--             </releases> -->
+<!--             <snapshots> -->
+<!--                 <enabled>true</enabled> -->
+<!--             </snapshots> -->
+<!--         </repository> -->
+<!--         <repository> -->
+<!--             <id>zoostar-release</id> -->
+<!--             <url>https://zoostar.jfrog.io/artifactory/zoostar-libs-release</url> -->
+<!--             <releases> -->
+<!--                 <enabled>true</enabled> -->
+<!--             </releases> -->
+<!--             <snapshots> -->
+<!--                 <enabled>false</enabled> -->
+<!--             </snapshots> -->
+<!--         </repository> -->
+<!--     </repositories> -->
 </project>
