@@ -7,3 +7,10 @@ pipelines:
             - maven
           script:
             - mvn verify
+  branches:
+   feature/*:
+      - step:
+         caches:
+            - maven
+         script:
+            - echo "Will be called from a featur branch"
