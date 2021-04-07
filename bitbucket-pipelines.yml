@@ -7,7 +7,7 @@ pipelines:
          caches:
             - maven
          script:
-            - echo "Will be called from a featur branch"
+            - mvn verify sonar:sonar
   default:
       - step:
           caches:
