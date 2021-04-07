@@ -1,0 +1,23 @@
+image: maven:3.6.3-jdk-11
+
+pipelines:
+  branches:
+    release/*:
+      - step:
+         caches:
+            - maven
+         script:
+            - mvn deploy sonar:sonar
+    feature/*:
+      - step:
+         caches:
+            - maven
+         script:
+            - mvn verify sonar:sonar
+  default:
+      - step:
+          caches:
+            - maven
+          script:
+            - mvn verify
+            
