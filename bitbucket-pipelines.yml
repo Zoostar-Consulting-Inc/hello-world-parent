@@ -2,7 +2,13 @@ image: maven:3.6.3-jdk-11
 
 pipelines:
   branches:
-   feature/*:
+    release/*:
+      - step:
+         caches:
+            - maven
+         script:
+            - mvn deploy sonar:sonar
+    feature/*:
       - step:
          caches:
             - maven
