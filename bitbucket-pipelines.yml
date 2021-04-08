@@ -1,23 +1,49 @@
 image: maven:3.6.3-jdk-11
 
+clone:
+  # SonarCloud scanner needs the full history to assign issues properly
+  depth: full
+
+definitions:
+  caches:
+    # Caching SonarCloud artifacts will speed up your build
+    sonar: ~/.sonar/cache
+  steps:
+    - step: &build-test-sonarcloud
+        name: Build, test and analyze on SonarCloud
+        caches:
+          - maven
+          - sonar
+        script:
+          - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        after-script:
+          # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
+          - pipe: atlassian/checkstyle-report:0.2.0
+        artifacts:
+          - target/**
+    - step: &build-test-sonarcloud-deploy
+        name: Build, test, analyze on SonarCloud and deploy to Artifactory
+        caches:
+          - maven
+          - sonar
+        script:
+          - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent deploy org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        artifacts:
+          - target/**
+          
 pipelines:
   branches:
+    master:
+      - step: *build-test-sonarcloud-deploy
     release/*:
-      - step:
-         caches:
-            - maven
-         script:
-            - mvn deploy sonar:sonar
-    feature/*:
-      - step:
-         caches:
-            - maven
-         script:
-            - mvn verify sonar:sonar
+      - step: *build-test-sonarcloud-deploy
+
   default:
-      - step:
-          caches:
-            - maven
-          script:
-            - mvn verify
-            
+      - parallel:
+        - step: *build-test-sonarcloud
+        - step:
+            name: Security Scan
+            script:
+              # Run a security scan for sensitive data.
+              # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
+              - pipe: atlassian/git-secrets-scan:0.4.3

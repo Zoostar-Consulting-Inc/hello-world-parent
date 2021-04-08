@@ -39,6 +39,7 @@ import net.zoostar.hw.dao.hsql.UserRepository;
 import net.zoostar.hw.model.User;
 import net.zoostar.hw.service.UserService;
 import net.zoostar.hw.service.impl.UserServiceImpl;
+import net.zoostar.hw.web.request.UserRequest;
 
 @Slf4j
 @ActiveProfiles({"test"})
@@ -84,16 +85,16 @@ class UserRestControllerTest {
 			thenReturn(savedEntity(id, entity));
 
 		//WHEN
-		User user = new User();
-		user.setEmail(entity.getEmail());
-		user.setName(entity.getName());
-		ResponseEntity<User> response = controller.create(user);
+		UserRequest request = new UserRequest();
+		request.setEmail(entity.getEmail());
+		request.setFirstName(entity.getName());
+		request.setLastName("Last");
+		ResponseEntity<User> response = controller.create(request);
 		
 		//THEN
-		assertTrue(user.isNew());
 		assertNotNull(response);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		user = response.getBody();
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		User user = response.getBody();
 		assertNotNull(user);
 		log.info("Retrieved entity: {}", user);
 		assertEquals(entity.getEmail(), user.getEmail());
@@ -109,35 +110,15 @@ class UserRestControllerTest {
 	@Test
 	void testCreateWithBlankEmail() throws JsonParseException, JsonMappingException, IOException {
 		//WHEN
-		User user = new User();
-		ResponseEntity<User> response = controller.create(user);
+		UserRequest request = new UserRequest();
+		ResponseEntity<User> response = controller.create(request);
 		
 		//THEN
 		assertNotNull(response);
 		assertEquals(HttpStatus.EXPECTATION_FAILED, response.getStatusCode());
-		user = response.getBody();
+		User user = response.getBody();
 		assertNotNull(user);
 		log.info("Retrieved entity: {}", user);
-	}
-
-	@Test
-	void testCreateWithExistingId() throws JsonParseException, JsonMappingException, IOException {
-		//GIVEN
-		String id = UUID.randomUUID().toString();
-		User user = entity(0, 1);
-		user.setId(id);
-		
-		//WHEN
-		ResponseEntity<User> response = controller.create(user);
-		
-		//THEN
-		assertNotNull(response);
-		assertEquals(HttpStatus.EXPECTATION_FAILED, response.getStatusCode());
-		User entity = response.getBody();
-		assertNotNull(entity);
-		log.info("Retrieved entity: {}", user);
-		assertEquals(user.getEmail(), entity.getEmail());
-		assertEquals(user.getName(), entity.getName());
 	}
 
 	@Test
@@ -150,19 +131,19 @@ class UserRestControllerTest {
 			thenReturn(savedEntity(id, entity));
 		
 		//WHEN
-		User user = new User();
-		user.setEmail(entity.getEmail());
-		user.setName(entity.getName());
-		ResponseEntity<User> response = controller.create(user);
+		UserRequest request = new UserRequest();
+		request.setEmail(entity.getEmail());
+		request.setFirstName(entity.getName());
+		request.setLastName("Last");
+		ResponseEntity<User> response = controller.create(request);
 		
 		//THEN
 		assertNotNull(response);
 		assertEquals(HttpStatus.EXPECTATION_FAILED, response.getStatusCode());
-		user = response.getBody();
+		User user = response.getBody();
 		assertNotNull(user);
 		log.info("Retrieved entity: {}", user);
 		assertEquals(entity.getEmail(), user.getEmail());
-		assertEquals(entity.getName(), user.getName());
 	}
 
 	@Test
