@@ -27,7 +27,6 @@ definitions:
           - maven
           - sonar
         script:
-          - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent deploy org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
           - pipe: JfrogDev/artifactory-maven:0.3.3
             variables:
               ARTIFACTORY_URL: 'https://sonarcloud.io'
@@ -35,6 +34,7 @@ definitions:
               ARTIFACTORY_PASSWORD: ${ARTIFACTORY_PASSWORD}
               MAVEN_SNAPSHOT_REPO: 'libs-snapshot'
               MAVEN_RELEASE_REPO: 'libs-release'
+          - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent deploy org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
         after-script:
           # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
           - pipe: atlassian/checkstyle-report:0.2.0
