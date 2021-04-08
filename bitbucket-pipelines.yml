@@ -16,6 +16,9 @@ definitions:
           - sonar
         script:
           - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        after-script:
+          # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
+          - pipe: atlassian/checkstyle-report:0.2.0
         artifacts:
           - target/**
     - step: &build-test-sonarcloud-deploy
@@ -37,16 +40,7 @@ pipelines:
 
   default:
       - parallel:
-        - step:
-            name: Build, test and analyze on SonarCloud
-            caches:
-              - maven
-              - sonar
-            script:
-              - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-            after-script:
-              # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
-              - pipe: atlassian/checkstyle-report:0.2.0
+        - step: *build-test-sonarcloud
         - step:
             name: Security Scan
             script:
