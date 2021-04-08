@@ -64,16 +64,16 @@
 			</plugin>
 		</plugins>
 	</build>
-<!-- 	<distributionManagement> -->
-<!-- 	    <repository> -->
-<!-- 	        <id>zoostar</id> -->
-<!-- 	        <name>a0z0gpgshkphc-artifactory-primary-0-releases</name> -->
+	<distributionManagement>
+	    <repository>
+	        <id>central</id>
+	        <name>a0z0gpgshkphc-artifactory-primary-0-releases</name>
 <!-- 	        <url>https://zoostar.jfrog.io/artifactory/maven-quickstart</url> -->
-<!-- 	    </repository> -->
-<!-- 	    <snapshotRepository> -->
-<!-- 	        <id>zoostar</id> -->
-<!-- 	        <name>a0z0gpgshkphc-artifactory-primary-0-snapshots</name> -->
+	    </repository>
+	    <snapshotRepository>
+	        <id>snapshots</id>
+	        <name>a0z0gpgshkphc-artifactory-primary-0-snapshots</name>
 <!-- 	        <url>https://zoostar.jfrog.io/artifactory/maven-quickstart</url> -->
-<!-- 	    </snapshotRepository> -->
-<!-- 	</distributionManagement> -->
+	    </snapshotRepository>
+	</distributionManagement>
 </project>
