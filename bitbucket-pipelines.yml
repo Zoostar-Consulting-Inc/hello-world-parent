@@ -1,21 +1,32 @@
 image: maven:3.6.3-jdk-11
 
+clone:
+  # SonarCloud scanner needs the full history to assign issues properly
+  depth: full
+
+definitions:
+  caches:
+    # Caching SonarCloud artifacts will speed up your build
+    sonar: ~/.sonar/cache
+
 pipelines:
   branches:
     release/*:
       - step:
          caches:
             - maven
+            - sonar
          script:
             - mvn deploy sonar:sonar
   default:
       - parallel:
         - step:
-            name: Build and Test
+            name: Build, test and analyze on SonarCloud
             caches:
               - maven
+              - sonar
             script:
-              - mvn -B verify sonar:sonar
+              - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
             after-script:
               # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
               - pipe: atlassian/checkstyle-report:0.2.0
