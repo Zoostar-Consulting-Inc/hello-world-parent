@@ -8,16 +8,33 @@ definitions:
   caches:
     # Caching SonarCloud artifacts will speed up your build
     sonar: ~/.sonar/cache
-
+  steps:
+    - step: &build-test-sonarcloud
+        name: Build, test and analyze on SonarCloud
+        caches:
+          - maven
+          - sonar
+        script:
+          - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        artifacts:
+          - target/**
+    - step: &build-test-sonarcloud-deploy
+        name: Build, test, analyze on SonarCloud and deploy to Artifactory
+        caches:
+          - maven
+          - sonar
+        script:
+          - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent deploy org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        artifacts:
+          - target/**
+          
 pipelines:
   branches:
+    master:
+      - step: *build-test-sonarcloud-deploy
     release/*:
-      - step:
-         caches:
-            - maven
-            - sonar
-         script:
-            - mvn deploy sonar:sonar
+      - step: *build-test-sonarcloud-deploy
+
   default:
       - parallel:
         - step:

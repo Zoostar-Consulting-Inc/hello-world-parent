@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 			@Override
 			public void validate(User user) throws ValidatorException {
 				log.info("{}...", "Validating user for required field: email");
-				log.info("...{}...", "validating");
+				log.info("... {} ...", "validating");
 				if(!StringUtils.hasText(user.getEmail())) {
 					throw new MissingRequiredFieldException("Missing Required Field: email");
 				}
