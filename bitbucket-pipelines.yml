@@ -28,6 +28,9 @@ definitions:
           - sonar
         script:
           - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent deploy org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        after-script:
+          # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
+          - pipe: atlassian/checkstyle-report:0.2.0
         artifacts:
           - target/**
           
