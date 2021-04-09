@@ -92,6 +92,7 @@ class UserRestControllerTest {
 		ResponseEntity<User> response = controller.create(request);
 		
 		//THEN
+		assertTrue("UserRequest(email=user1@email.com, firstName=User1, lastName=Last)".equals(request.toString()));
 		assertNotNull(response);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 		User user = response.getBody();

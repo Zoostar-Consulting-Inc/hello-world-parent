@@ -68,12 +68,12 @@
 	    <repository>
 	        <id>central</id>
 			<name>zoostar-libs-release</name>
-			<url>https://zoostar.jfrog.io/artifactory/zoostar-libs-release</url>
+			<url>https://zoostar.jfrog.io/artifactory/maven-quickstart</url>
    	    </repository>
 	    <snapshotRepository>
 	        <id>snapshots</id>
 			<name>zoostar-libs-snapshot</name>
-			<url>https://zoostar.jfrog.io/artifactory/zoostar-libs-snapshot</url>
+			<url>https://zoostar.jfrog.io/artifactory/maven-quickstart</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>
