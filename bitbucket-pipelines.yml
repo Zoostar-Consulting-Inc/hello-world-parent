@@ -29,9 +29,9 @@ definitions:
         script:
           - pipe: JfrogDev/artifactory-maven:0.3.3
             variables:
-              ARTIFACTORY_URL: ${ARTIFACTORY_URL}
-              ARTIFACTORY_USER: ${ARTIFACTORY_USER}
-              ARTIFACTORY_PASSWORD: ${ARTIFACTORY_PASSWORD}
+              ARTIFACTORY_URL: $ARTIFACTORY_URL
+              ARTIFACTORY_USER: $ARTIFACTORY_USER
+              ARTIFACTORY_PASSWORD: $ARTIFACTORY_PASSWORD
               MAVEN_SNAPSHOT_REPO: 'libs-snapshot'
               MAVEN_RELEASE_REPO: 'libs-release'
           - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent deploy org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
