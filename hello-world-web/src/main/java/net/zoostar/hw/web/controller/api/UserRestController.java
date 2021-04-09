@@ -36,6 +36,8 @@ public class UserRestController {
 	
 	@PostMapping(value="/create.json", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> create(@RequestBody UserRequest request) {
+		log.info("Request received to create new: {}", request);
+		
 		ResponseEntity<User> response = null;
 		User user = new User();
 		try {

@@ -13,9 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -25,20 +26,22 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ActiveProfiles({"test"})
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:META-INF/applicationContext-test.xml"})
 class IndexControllerTest {
 
-	protected IndexController controller;
-
+	@Autowired
+	IndexController controller;
+	
 	@BeforeEach
 	public void beforeEach(TestInfo test) throws JsonParseException, JsonMappingException, IOException {
 		System.out.println();
 		log.info("Executing test: [{}]...", test.getDisplayName());
 
-		controller = new IndexController();
-		controller.setEnvValue("dev");
-		controller.setAppName("Hello World");
+//		controller = new IndexController();
+//		controller.setEnvValue("dev");
+//		controller.setAppName("Hello World");
 	}
 
 	@Test
@@ -52,7 +55,7 @@ class IndexControllerTest {
 		//THEN
 		assertNotNull(modelAndView);
 		assertEquals("index", modelAndView.getViewName());
-		assertEquals("dev", modelAndView.getModel().get("env"));
+		assertEquals("test", modelAndView.getModel().get("env"));
 		assertEquals("Hello World", modelAndView.getModel().get("message"));
 	}
 

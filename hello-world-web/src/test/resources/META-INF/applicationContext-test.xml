@@ -5,6 +5,11 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<context:annotation-config />
+	<context:component-scan base-package="net.zoostar.hw.web.controller">
+		<context:exclude-filter type="regex" expression="net.zoostar.hw.web.controller.api.*"/>
+	</context:component-scan>
+
 	<beans profile="test">
 		<context:property-placeholder location="classpath:app.properties, classpath:test/env.properties"/>
 	</beans>
