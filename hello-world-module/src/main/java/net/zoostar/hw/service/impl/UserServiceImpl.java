@@ -33,6 +33,10 @@ public class UserServiceImpl implements UserService {
 	public User create(User user) throws EntityAlreadyExistsException, ValidatorException {
 		log.info("Creating entity: {}...", user);
 		
+		if(!user.isNew()) {
+			throw new EntityAlreadyExistsException(user);
+		}
+		
 		Validator<User> validator = new Validator<>() {
 			@Override
 			public void validate(User user) throws ValidatorException {
@@ -46,16 +50,13 @@ public class UserServiceImpl implements UserService {
 		};
 		validator.validate(user);
 		
-		if(!user.isNew()) {
+		try {
+			user = retrieveByEmail(user.getEmail());
 			throw new EntityAlreadyExistsException(user);
-		} else {
-			try {
-				user = retrieveByEmail(user.getEmail());
-				throw new EntityAlreadyExistsException(user);
-			} catch (EntityNotFoundException e) {
-				user = getRepository().save(user);
-			}
+		} catch (EntityNotFoundException e) {
+			user = getRepository().save(user);
 		}
+
 		return user;
 	}
 
@@ -77,13 +78,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public User retrieveById(String id) throws EntityNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	@Transactional(readOnly = true)
 	public Page<User> retrieve(int number, int limit) {
 		log.info("retrieve(number:{}, limit:{})", number, limit);
 		
@@ -94,20 +88,6 @@ public class UserServiceImpl implements UserService {
 			throw new IllegalArgumentException("Page size limit has to be greater than 0!");
 		
 		return getRepository().findAll(PageRequest.of(number, limit));
-	}
-
-	@Override
-	@Transactional
-	public User update(User entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	@Transactional
-	public User delete(String id) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
