@@ -34,7 +34,7 @@ definitions:
               ARTIFACTORY_PASSWORD: $ARTIFACTORY_PASSWORD
               MAVEN_SNAPSHOT_REPO: 'libs-snapshot'
               MAVEN_RELEASE_REPO: 'libs-release'
-          - mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar deploy
+          - mvn -B install org.sonarsource.scanner.maven:sonar-maven-plugin:sonar deploy
         after-script:
           # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
           - pipe: atlassian/checkstyle-report:0.2.0
