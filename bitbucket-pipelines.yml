@@ -35,7 +35,7 @@ definitions:
               ARTIFACTORY_PASSWORD: $ARTIFACTORY_PASSWORD
               MAVEN_SNAPSHOT_REPO: 'libs-snapshot'
               MAVEN_RELEASE_REPO: 'libs-release'
-          - mvn -B install org.sonarsource.scanner.maven:sonar-maven-plugin:sonar deploy
+              MAVEN_COMMAND: 'clean test install'
         services:
           - docker
         after-script:
