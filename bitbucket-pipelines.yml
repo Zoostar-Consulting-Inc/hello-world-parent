@@ -3,6 +3,7 @@ image: maven:3.6.3-jdk-11
 clone:
   # SonarCloud scanner needs the full history to assign issues properly
   depth: full
+  enabled: true
 
 definitions:
   caches:
@@ -34,6 +35,8 @@ definitions:
               ARTIFACTORY_PASSWORD: $ARTIFACTORY_PASSWORD
               MAVEN_SNAPSHOT_REPO: 'libs-snapshot'
               MAVEN_RELEASE_REPO: 'libs-release'
+        services:
+          - docker
           - mvn -B install org.sonarsource.scanner.maven:sonar-maven-plugin:sonar deploy
         after-script:
           # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
