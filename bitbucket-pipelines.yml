@@ -18,10 +18,10 @@ pipelines:
             - maven
             - sonar
           script:
-            - mvn -B verify sonar:sonar
+            - mvn -s settings.xml -B verify sonar:sonar
       - step:
           name: deploy
           caches:
             - maven
           script:
-            - mvn deploy
+            - mvn -s settings.xml deploy
