@@ -27,7 +27,7 @@ definitions:
           - maven
           - sonar
         script:
-          - mvn -s settings.xml -B verify sonar:sonar deploy -Dmaven.test.skip=true
+          - mvn -s settings.xml -B verify sonar:sonar deploy
 
 # Workflow Configuration
 
