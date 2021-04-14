@@ -10,7 +10,7 @@ definitions:
     sonar: ~/.sonar/cache  # Caching SonarCloud artifacts will speed up your build
   steps:
     - step: &build-test-scan
-        name: Build, test and analyze on SonarCloud
+        name: Build, Test and SonarCloud Analysis
         caches:
           - maven
           - sonar
@@ -21,8 +21,8 @@ definitions:
           - pipe: atlassian/checkstyle-report:0.2.0
         artifacts:
           - target/**
-    - step: &scan-deploy
-        name: SonarCloud Analysis and Deploy to Artifactory
+    - step: &build-test-scan-deploy
+        name: Build, Test, SonarCloud Analysis and Artifactory Deployment
         caches:
           - maven
         script:
@@ -33,9 +33,9 @@ definitions:
 pipelines:
   branches:
     master:
-      - step: *scan-deploy
+      - step: *build-test-scan-deploy
     release/*:
-      - step: *scan-deploy
+      - step: *build-test-scan-deploy
       
   default:
     - parallel:
