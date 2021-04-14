@@ -26,6 +26,3 @@ pipelines:
             - sonar
           script:
             - mvn -B verify
-          after-script:
-              # Collect checkstyle check results if any and convert to Bitbucket Code Insights.
-            - pipe: atlassian/checkstyle-report:0.2.0
