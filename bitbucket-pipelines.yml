@@ -26,7 +26,7 @@ definitions:
         caches:
           - maven
         script:
-          - mvn -s settings.xml sonar:sonar deploy -Dmaven.test.skip=true
+          - mvn -s settings.xml -B verify sonar:sonar deploy -Dmaven.test.skip=true
 
 # Workflow Configuration
 
