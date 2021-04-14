@@ -7,6 +7,13 @@
 
 image: maven:3.6.3
 
+clone:
+  depth: full              # SonarCloud scanner needs the full history to assign issues properly
+
+definitions:
+  caches:
+    sonar: ~/.sonar/cache  # Caching SonarCloud artifacts will speed up your build
+    
 # Workflow Configuration
 
 pipelines:
@@ -16,9 +23,12 @@ pipelines:
             name: Build and Test
             caches:
               - maven
+              - sonar
             script:
               - pipe: sonarsource/sonarcloud-scan:1.2.1
-              - mvn -B verify sonar:sonar --file pom.xml
+              - mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+            artifacts:
+              - target/**   # Needed to resolve error like: Exception: Your project contains .java files
             after-script:
                 # Collect checkstyle check results if any and convert to Bitbucket Code Insights.
               - pipe: atlassian/checkstyle-report:0.2.0
