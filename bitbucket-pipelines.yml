@@ -24,4 +24,4 @@ pipelines:
           caches:
             - maven
           script:
-            - mvn -s https://zoostar.jfrog.io/artifactory/maven-quickstart-local/settings.xml deploy
+            - mvn deploy
