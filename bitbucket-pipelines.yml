@@ -21,28 +21,28 @@ definitions:
           - pipe: atlassian/checkstyle-report:0.2.0
         artifacts:
           - target/**
-    - step: &deploy
-        name: Deploy to Artifactory
+    - step: &scan-deploy
+        name: SonarCloud Analysis and Deploy to Artifactory
         caches:
           - maven
         script:
-          - mvn -s settings.xml deploy -Dmaven.test.skip=true
+          - mvn -s settings.xml sonar:sonar deploy -Dmaven.test.skip=true
 
 # Workflow Configuration
 
 pipelines:
   branches:
     master:
-      - step: *deploy
+      - step: *scan-deploy
     release/*:
-      - step: *deploy
+      - step: *scan-deploy
       
-    default:
-      - parallel:
-        - step: *build-test-scan
-        - step:
-            name: Security Scan
-            script:
-              # Run a security scan for sensitive data.
-              # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
-              - pipe: atlassian/git-secrets-scan:0.4.3
+  default:
+    - parallel:
+      - step: *build-test-scan
+      - step:
+          name: Security Scan
+          script:
+            # Run a security scan for sensitive data.
+            # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
+            - pipe: atlassian/git-secrets-scan:0.4.3
