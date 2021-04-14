@@ -21,21 +21,21 @@ definitions:
           - pipe: atlassian/checkstyle-report:0.2.0
         artifacts:
           - target/**
-    - step: &deploy
-        name: Deploy to Artifactory
+    - step: &scan-deploy
+        name: SonarCloud Analysis and Deploy to Artifactory
         caches:
           - maven
         script:
-          - mvn -s settings.xml deploy -Dmaven.test.skip=true
+          - mvn -s settings.xml sonar:sonar deploy -Dmaven.test.skip=true
 
 # Workflow Configuration
 
 pipelines:
   branches:
     master:
-      - step: *deploy
+      - step: *scan-deploy
     release/*:
-      - step: *deploy
+      - step: *scan-deploy
       
   default:
     - parallel:
