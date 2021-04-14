@@ -24,19 +24,4 @@ pipelines:
           caches:
             - maven
           script:
-            - pipe: jfrog/jfrog-setup-cli:1.0.0
-            - source ./jfrog-setup-cli.sh
-            # Configure the project with Artifactory servers and repositories 
-            - jfrog rt mvnc --server-id-resolve=eco --repo-resolve-releases=libs-release --repo-resolve-snapshots=libs-snapshot --server-id-deploy=eco --repo-deploy-releases=libs-release-local --repo-deploy-snapshots=libs-snapshot-local
-            # Build the project, while deploying artifacts to Artifactory
-            - jfrog rt mvn clean install
-            # Collect environment variables
-            - jfrog rt bce
-            # Collect git details and tracked project issues
-            - jfrog rt bag --config=./issues-collection.yml
-            # Publish build info
-            - jfrog rt bp
-            # Trigger Xray Scan on the published build
-            - jfrog rt bs
-            # Promote build
-            - jfrog rt bpr promotion-repo
+            - mvn deploy
