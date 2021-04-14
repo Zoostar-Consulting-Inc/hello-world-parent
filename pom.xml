@@ -10,6 +10,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.4.3</version>
+		<relativePath></relativePath>
 	</parent>
 	<properties>
 		<java.version>11</java.version>
@@ -76,4 +77,28 @@
 			<url>https://zoostar.jfrog.io/artifactory/maven-quickstart</url>
 		</snapshotRepository>
 	</distributionManagement>
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>zoostar-libs-release</name>
+			<url>https://zoostar.jfrog.io/artifactory/maven-quickstart</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>snapshots</id>
+			<name>zoostar-libs-snapshots</name>
+			<url>https://zoostar.jfrog.io/artifactory/maven-quickstart</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>

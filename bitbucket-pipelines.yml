@@ -1,57 +1,45 @@
 image: maven:3.6.3-jdk-11
 
 clone:
-  # SonarCloud scanner needs the full history to assign issues properly
-  depth: full
   enabled: true
+  depth: full              # SonarCloud scanner needs the full history to assign issues properly
 
 definitions:
   caches:
-    # Caching SonarCloud artifacts will speed up your build
-    sonar: ~/.sonar/cache
+    maven: ~/.m2/repository
+    sonar: ~/.sonar/cache  # Caching SonarCloud artifacts will speed up your build
   steps:
-    - step: &build-test-sonarcloud
+    - step: &build-test-scan
         name: Build, test and analyze on SonarCloud
         caches:
           - maven
           - sonar
         script:
-          - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          - mvn -s settings.xml -B verify sonar:sonar
         after-script:
           # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
           - pipe: atlassian/checkstyle-report:0.2.0
         artifacts:
           - target/**
-    - step: &build-test-sonarcloud-deploy
-        name: Build, test, analyze on SonarCloud and deploy to Artifactory
+    - step: &deploy
+        name: Deploy to Artifactory
         caches:
           - maven
-          - sonar
         script:
-          - pipe: JfrogDev/artifactory-maven:0.3.3
-            variables:
-              ARTIFACTORY_URL: $ARTIFACTORY_URL
-              ARTIFACTORY_USER: $ARTIFACTORY_USER
-              ARTIFACTORY_PASSWORD: $ARTIFACTORY_PASSWORD
-              MAVEN_SNAPSHOT_REPO: 'libs-snapshot'
-              MAVEN_RELEASE_REPO: 'libs-release'
-          - mvn -B install sonar:sonar deploy
-        after-script:
-          # Collect checkstyle results, if any, and convert to Bitbucket Code Insights.
-          - pipe: atlassian/checkstyle-report:0.2.0
-        artifacts:
-          - target/**
-          
+          - mvn -s settings.xml deploy -Dmaven.test.skip=true
+
+# Workflow Configuration
+
 pipelines:
   branches:
     master:
-      - step: *build-test-sonarcloud-deploy
+      - step: *deploy
     release/*:
-      - step: *build-test-sonarcloud-deploy
-
-  default:
+      - step: *deploy
+      
+    default:
       - parallel:
-        - step: *build-test-sonarcloud
+        - step: *build-test-scan
         - step:
             name: Security Scan
             script:
