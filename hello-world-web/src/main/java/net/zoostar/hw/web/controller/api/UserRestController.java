@@ -21,6 +21,7 @@ import net.zoostar.hw.exception.EntityNotFoundException;
 import net.zoostar.hw.model.User;
 import net.zoostar.hw.service.UserService;
 import net.zoostar.hw.validate.ValidatorException;
+import net.zoostar.hw.web.request.UserRequest;
 
 @Slf4j
 @Getter
@@ -34,12 +35,22 @@ public class UserRestController {
 	protected UserService userManager;
 	
 	@PostMapping(value="/create.json", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<User> create(@RequestBody User user) {
+	public ResponseEntity<User> create(@RequestBody UserRequest request) {
+		log.info("Request received to create new: {}", request);
+		
 		ResponseEntity<User> response = null;
+		User user = new User();
 		try {
+			user.setEmail(request.getEmail());
+			user.setName(new StringBuilder().
+					append(request.getFirstName()).
+					append(" ").
+					append(request.getLastName()).
+					toString()
+			);
 			user = getUserManager().create(user);
 			log.info("Created new entity: {}", user);
-			response = new ResponseEntity<>(user, HttpStatus.OK);
+			response = new ResponseEntity<>(user, HttpStatus.CREATED);
 		} catch (EntityAlreadyExistsException e) {
 			log.warn("{}: {}", e.getMessage(), e.getEntity());
 			response = new ResponseEntity<>(user, HttpStatus.EXPECTATION_FAILED);

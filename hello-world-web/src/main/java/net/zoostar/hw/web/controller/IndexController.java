@@ -9,20 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
-@Setter
 @Controller
 public class IndexController {
 	
 	@Value("${env.value}")
-	private String envValue;
+	protected String envValue;
 	
 	@Value("${app.name}")
-	private String appName;
+	protected String appName;
 	
 	@GetMapping(value="/", produces=MediaType.TEXT_HTML_VALUE)
 	public ModelAndView loadHomePage(Map<String, Object> model) {
