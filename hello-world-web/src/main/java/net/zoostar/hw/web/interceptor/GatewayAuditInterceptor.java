@@ -11,17 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GatewayAuditInterceptor implements HandlerInterceptor {
 
-	private static final ThreadLocal<GatewayAudit> AUDIT = new ThreadLocal<>() {
-
-		@Override
-		protected GatewayAudit initialValue() {
+	private static final ThreadLocal<GatewayAudit> AUDIT = ThreadLocal.withInitial(()-> {
+			log.debug("{}...", "Initializing new GatewayAudit");
 			long time = System.currentTimeMillis();
 			GatewayAudit audit = new GatewayAudit();
 			audit.setTime(time);
+			log.debug("GatewayAudit initialized: {}", audit);
 			return audit;
-		}
-		
-	};
+		}		
+	);
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
