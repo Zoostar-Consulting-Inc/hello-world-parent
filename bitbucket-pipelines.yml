@@ -13,16 +13,24 @@ definitions:
 pipelines:
   default:
       - step:
-          name: Build and Test
+          name: build-test-sonar
           caches:
             - maven
             - sonar
           script:
             - mvn -B verify sonar:sonar
       - step:
-          name: Deploy to Artifactory
+          name: deploy
           caches:
             - maven
           script:
-            - mvn -B deploy
-            
+            - pipe: jfrog/jfrog-setup-cli:1.0.0
+            - source ./jfrog-setup-cli.sh
+            # Download artifacts from Artifactory
+            - jfrog rt dl artifacts/
+            # Upload artifacts to Artifactory
+            - jfrog rt u file artifacts/
+            # Collect environment variables
+            - jfrog rt bce
+            # Publish build info
+            - jfrog rt bp
