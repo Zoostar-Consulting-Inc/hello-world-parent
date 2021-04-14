@@ -19,36 +19,13 @@ definitions:
 
 pipelines:
   default:
-      - parallel:
-        - step:
-            name: Build and Test
-            caches:
-              - maven
-              - sonar
-            script:
-              - pipe: sonarsource/sonarcloud-scan:1.2.1
-              - mvn -B org.jacoco:jacoco-maven-plugin:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-            artifacts:
-              - target/**   # Needed to resolve error like: Exception: Your project contains .java files
-            after-script:
-                # Collect checkstyle check results if any and convert to Bitbucket Code Insights.
-              - pipe: atlassian/checkstyle-report:0.2.0
-        - step:
-            name: Security Scan
-            script:
-              # Run a security scan for sensitive data.
-              # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
-              - pipe: atlassian/git-secrets-scan:0.4.3
       - step:
-          name: Deploy to Production
-          deployment: Production
-          trigger: manual
+          name: Build and Test
+          caches:
+            - maven
+            - sonar
           script:
-            - pipe: JfrogDev/artifactory-maven:0.3.3
-              variables:
-                ARTIFACTORY_URL: $ARTIFACTORY_URL
-                ARTIFACTORY_USER: $ARTIFACTORY_USER
-                ARTIFACTORY_PASSWORD: $ARTIFACTORY_PASSWORD
-                MAVEN_SNAPSHOT_REPO: 'libs-snapshot'
-                MAVEN_RELEASE_REPO: 'libs-release'
-            - mvn deploy
+            - mvn -B verify
+          after-script:
+              # Collect checkstyle check results if any and convert to Bitbucket Code Insights.
+            - pipe: atlassian/checkstyle-report:0.2.0
