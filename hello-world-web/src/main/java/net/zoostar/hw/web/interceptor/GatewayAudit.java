@@ -11,7 +11,7 @@ public class GatewayAudit {
 
 	private long time;
 	
-	private double duration;
+	private long duration;
 	
 	private String endPoint;
 	

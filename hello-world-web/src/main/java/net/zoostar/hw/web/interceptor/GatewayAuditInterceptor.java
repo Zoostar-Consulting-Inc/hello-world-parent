@@ -1,7 +1,5 @@
 package net.zoostar.hw.web.interceptor;
 
-import java.text.SimpleDateFormat;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,9 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GatewayAuditInterceptor implements HandlerInterceptor {
 
-	public static final String ISO_8601_STRING_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXX";
-	protected static final SimpleDateFormat ISO_8601_DATE_FORMAT = new SimpleDateFormat(ISO_8601_STRING_FORMAT);
-	
 	private static final ThreadLocal<GatewayAudit> AUDIT = new ThreadLocal<>() {
 
 		@Override
@@ -48,7 +43,8 @@ public class GatewayAuditInterceptor implements HandlerInterceptor {
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-		log.info("Completed servicing request in: {} seconds", (AUDIT.get().getDuration() / 1000));
+		double time = AUDIT.get().getDuration() / 1000;
+		log.info("Completed servicing request in: {} seconds", time);
 		AUDIT.remove();
 	}
 
