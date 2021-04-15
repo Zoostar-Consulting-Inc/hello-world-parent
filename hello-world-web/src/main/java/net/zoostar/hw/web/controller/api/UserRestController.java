@@ -63,13 +63,13 @@ public class UserRestController {
 	
 	@GetMapping(value="/page.json", produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<User>> retrieveUsers(@RequestParam int number, @RequestParam int limit) {
-		return new ResponseEntity<Page<User>>(getUserManager().retrieve(number, limit), HttpStatus.OK);
+		return new ResponseEntity<>(getUserManager().retrieve(number, limit), HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/email.json", produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<User> retrieveByEmail(@RequestParam String email) {
 		try {
-			return new ResponseEntity<User>(getUserManager().retrieveByEmail(email), HttpStatus.OK);
+			return new ResponseEntity<>(getUserManager().retrieveByEmail(email), HttpStatus.OK);
 		} catch (EntityNotFoundException e) {
 			log.warn("{}", e.getMessage());
 			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
