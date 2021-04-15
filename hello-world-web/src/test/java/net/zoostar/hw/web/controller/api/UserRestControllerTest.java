@@ -1,6 +1,7 @@
 package net.zoostar.hw.web.controller.api;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
@@ -100,12 +101,11 @@ class UserRestControllerTest {
 		log.info("Retrieved entity: {}", user);
 		assertEquals(entity.getEmail(), user.getEmail());
 		assertEquals(entity.getName(), user.getName());
-		assertTrue(entity.equals(entity));
-		assertTrue(user.equals(entity));
+		assertEquals(entity, user);
 		assertFalse(entity.isNew());
-		assertFalse(entity.equals(new User("random@email.com")));
-		assertFalse(entity.equals(null));
-		assertFalse(entity.equals(new Object()));
+		assertNotEquals(entity, new User("random@email.com"));
+		assertNotNull(entity);
+		assertNotEquals(entity, new Object());
 	}
 
 	@Test
