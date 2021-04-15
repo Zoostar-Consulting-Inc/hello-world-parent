@@ -12,7 +12,8 @@
 	
 	<context:load-time-weaver />
 	<context:annotation-config />
-	<context:component-scan base-package="net.zoostar.hw.service, net.zoostar.hw.web" />
+	<context:component-scan base-package="net.zoostar.hw.service, 
+			net.zoostar.hw.web, net.zoostar.hw.web.config" />
 	
 	<mvc:annotation-driven />
 	<mvc:default-servlet-handler />
