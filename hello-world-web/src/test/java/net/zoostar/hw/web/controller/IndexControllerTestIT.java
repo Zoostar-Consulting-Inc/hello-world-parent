@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -25,13 +26,14 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import lombok.extern.slf4j.Slf4j;
+import net.zoostar.hw.web.filter.GatewayAuditFilterChain;
 
 @Slf4j
 @WebAppConfiguration
 @ActiveProfiles({"test"})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:META-INF/applicationContext-test.xml"})
-class IndexControllerTest {
+class IndexControllerTestIT {
 
 	@Autowired
 	WebApplicationContext wac;
@@ -42,7 +44,11 @@ class IndexControllerTest {
 	public void beforeEach(TestInfo test) throws JsonParseException, JsonMappingException, IOException {
 		System.out.println();
 		log.info("Executing test: [{}]...", test.getDisplayName());
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		
+		GatewayAuditFilterChain filter = new GatewayAuditFilterChain();
+		Assert.assertNotNull(filter.getAuditor());
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).
+				addFilters(filter).build();
 	}
 
 	@Test
