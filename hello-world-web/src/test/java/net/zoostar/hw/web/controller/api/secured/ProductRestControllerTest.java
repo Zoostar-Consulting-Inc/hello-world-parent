@@ -1,4 +1,4 @@
-package net.zoostar.hw.web.controller;
+package net.zoostar.hw.web.controller.api.secured;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -33,7 +33,7 @@ import net.zoostar.hw.web.filter.GatewayAuditFilterChain;
 @ActiveProfiles({"test"})
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = {"classpath:META-INF/applicationContext-test.xml"})
-class IndexControllerTest {
+class ProductRestControllerTest {
 
 	@Autowired
 	WebApplicationContext wac;
@@ -52,16 +52,14 @@ class IndexControllerTest {
 	}
 
 	@Test
-	void testLoadHomePage() throws Exception {
+	void testLoadSecuredPage() throws Exception {
 		//WHEN
-	    MvcResult result = mockMvc.perform(get("/")).andReturn();
+	    MvcResult result = mockMvc.perform(get("/secured/api/product/page.json")).andReturn();
 	    
 		//THEN
 		assertNotNull(result);
 		ModelAndView modelAndView = result.getModelAndView();
-		assertEquals("index", modelAndView.getViewName());
-		assertEquals("test", modelAndView.getModel().get("env"));
-		assertEquals("Hello World", modelAndView.getModel().get("message"));
+		assertEquals("product", modelAndView.getViewName());
 	}
 
 }

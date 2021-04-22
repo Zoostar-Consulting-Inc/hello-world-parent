@@ -1,4 +1,4 @@
-package net.zoostar.hw.web.interceptor;
+package net.zoostar.hw.web.filter;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,4 +16,6 @@ public class GatewayAudit {
 	private String endPoint;
 	
 	private String remoteAddress;
+
+	private String username;
 }
