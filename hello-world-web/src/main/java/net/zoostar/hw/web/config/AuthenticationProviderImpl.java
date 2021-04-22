@@ -6,20 +6,16 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.zoostar.hw.exception.EntityNotFoundException;
-import net.zoostar.hw.model.User;
 import net.zoostar.hw.service.UserService;
 
 @Slf4j
 @Setter
 public class AuthenticationProviderImpl implements AuthenticationProvider {
 
-	private static final String PASSWORD = "Hello!23";
-	
 	@Autowired
 	private UserService userManager;
 	
@@ -27,18 +23,18 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		UsernamePasswordAuthenticationToken authenticated = null;
 		String email = authentication.getName().trim();
-		String password = authentication.getCredentials().toString();
+		var cred = authentication.getCredentials().toString();
 		log.info("Authenticating: {}...", email);
 		try {
-			User user = userManager.retrieveByEmail(email);
-			if(PASSWORD.equals(password)) {
-				authenticated = new UsernamePasswordAuthenticationToken(user.getEmail(), PASSWORD);
+			var user = userManager.retrieveByEmail(email);
+			if("Hello!23".equals(cred)) {
+				authenticated = new UsernamePasswordAuthenticationToken(user.getEmail(), "Hello!23");
 			} else {
-				throw new BadCredentialsException("Provided password does not equal to \" " + PASSWORD + "\"");
+				throw new BadCredentialsException("Provided password does not equal to \"Hello!23\"");
 			}
 		} catch (EntityNotFoundException e) {
-			log.warn("No entity found for email: {}", e.getMessage());
-			throw new UsernameNotFoundException(e.getMessage());
+			log.warn("No entity found for email: {}!", e.getMessage());
+			throw new BadCredentialsException("No entity found for supplied email!");
 		}
 		return authenticated;
 	}

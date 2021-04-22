@@ -39,7 +39,7 @@ public class UserRestController {
 		log.info("Request received to create new: {}", request);
 		
 		ResponseEntity<User> response = null;
-		User user = new User();
+		var user = new User();
 		try {
 			user.setEmail(request.getEmail());
 			user.setName(new StringBuilder().

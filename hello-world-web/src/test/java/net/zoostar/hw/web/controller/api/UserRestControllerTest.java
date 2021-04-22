@@ -67,13 +67,15 @@ class UserRestControllerTest extends AbstractMockTestHarness {
 		log.info("Retrieved entity: {}", user);
 		assertEquals(entity.getEmail(), user.getEmail());
 		assertEquals(entity.getName(), user.getName());
-		assertEquals(entity, entity);
 		assertEquals(entity, user);
 		assertFalse(entity.isNew());
 		assertNotEquals(entity, new User("random@email.com"));
 		assertNotNull(entity);
 		assertNotEquals(entity, new Object());
 		assertNotEquals(entity, null);
+		
+		User sameEntity = entity;
+		assertEquals(entity, sameEntity);
 	}
 
 	@Test

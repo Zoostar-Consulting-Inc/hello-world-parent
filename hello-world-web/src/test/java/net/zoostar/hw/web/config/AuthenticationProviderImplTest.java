@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -66,7 +65,7 @@ class AuthenticationProviderImplTest extends AbstractMockTestHarness {
 		final ThrowingRunnable throwingRunnable = () -> authenticationProvider.authenticate(authentication);
 		
 		//THEN
-		Assert.assertThrows(UsernameNotFoundException.class, throwingRunnable);
+		Assert.assertThrows(BadCredentialsException.class, throwingRunnable);
 	}
 	
 	@Test
