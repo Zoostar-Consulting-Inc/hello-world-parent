@@ -12,7 +12,6 @@ definitions:
     - step: &build-test-scan
         name: Build, Test and SonarCloud Analysis
         caches:
-          - docker
           - maven
           - sonar
         script:
@@ -25,7 +24,6 @@ definitions:
     - step: &build-test-scan-deploy
         name: Build, Test, SonarCloud Analysis and Artifactory Deployment
         caches:
-          - docker
           - maven
           - sonar
         script:
