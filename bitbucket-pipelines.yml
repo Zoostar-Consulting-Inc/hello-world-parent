@@ -34,6 +34,20 @@ definitions:
 pipelines:
   branches:
     master:
-      - step: *build-test-scan-deploy
+    - parallel:
+        - step: *build-test-scan-deploy
+        - step:
+            name: Security Scan
+            script:
+              # Run a security scan for sensitive data.
+              # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
+              - pipe: atlassian/git-secrets-scan:0.4.3
     release/*:
-      - step: *build-test-scan-deploy
+    - parallel:
+        - step: *build-test-scan-deploy
+        - step:
+            name: Security Scan
+            script:
+              # Run a security scan for sensitive data.
+              # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
+              - pipe: atlassian/git-secrets-scan:0.4.3
