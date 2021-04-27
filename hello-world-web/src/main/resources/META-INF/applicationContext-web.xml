@@ -16,6 +16,14 @@
 			net.zoostar.hw.web, net.zoostar.hw.web.config" />
 	
 	<mvc:annotation-driven />
+	
+	<mvc:view-controller path="/" view-name="index" />
+	<mvc:view-controller path="/login" view-name="login"/>
+
+	<mvc:resources location="/resources/theme-default/" mapping="/resources/**" cache-period="86400"/>
+	<mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**" />
+	<mvc:resources location="classpath:/META-INF/resources/" mapping="swagger-ui.html" />
+
 	<mvc:default-servlet-handler />
 	
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
