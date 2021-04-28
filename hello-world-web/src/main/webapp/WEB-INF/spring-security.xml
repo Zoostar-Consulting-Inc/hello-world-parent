@@ -7,6 +7,7 @@
 	
 	<http security="none" pattern="/resources/**" />
 	<http security="none" pattern="/webjars/**" />
+	<http security="none" pattern="/api/user/create.json" />
 
 	<beans:bean id="authenticationProvider" class="net.zoostar.hw.web.config.AuthenticationProviderImpl"/>
 	

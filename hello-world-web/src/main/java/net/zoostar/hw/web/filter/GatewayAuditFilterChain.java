@@ -1,7 +1,14 @@
 package net.zoostar.hw.web.filter;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.AbstractRequestLoggingFilter;
 
@@ -13,22 +20,45 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class GatewayAuditFilterChain extends AbstractRequestLoggingFilter {
 
-	private final GatewayAudit auditor = new GatewayAudit();
+	private static final List<String> EXCLUDED_ENDPOINTS = Arrays.asList(
+			"/hw/signin.html", "/hw/login", "/hw/resources/css/bootstrap.min.css", 
+			"/hw/resources/css/ie10-viewport-bug-workaround.css", "/hw/resources/css/signin.css",
+			"/hw/resources/js/ie-emulation-modes-warning.js", "/hw/resources/js/ie10-viewport-bug-workaround.js"
+	);
+	
+	private boolean exclude;
+	private final GatewayAudit auditor = new GatewayAudit(UUID.randomUUID().toString());
 	
 	@Override
 	protected void beforeRequest(HttpServletRequest request, String message) {
-		auditor.setEndPoint(request.getRequestURI());
-		auditor.setRemoteAddress(request.getRemoteAddr());
-		auditor.setUsername(request.getRemoteUser());
-		log.info("Begin Gateway Audit of: {}", auditor);
-		auditor.setTime(System.currentTimeMillis());
+		boolean exclude = exclude(request.getRequestURI());
+		if(!exclude) {
+			auditor.setUsername(username());
+			auditor.setEndPoint(request.getRequestURI());
+			auditor.setRemoteAddress(request.getRemoteAddr());
+			log.info("Begin Gateway Audit of: {}", auditor.getId());
+			auditor.setTime(System.currentTimeMillis());
+		}
+	}
+
+	protected boolean exclude(String endpoint) {
+		return EXCLUDED_ENDPOINTS.contains(endpoint);
 	}
 
 	@Override
 	protected void afterRequest(HttpServletRequest request, String message) {
-		auditor.setDuration(System.currentTimeMillis() - auditor.getTime());
-		double time = (double)auditor.getDuration() / 1000;
-		log.info("Completed servicing request in: {} seconds", time);
+		if(!exclude) {
+			auditor.setDuration(System.currentTimeMillis() - auditor.getTime());
+			double time = (double)auditor.getDuration() / 1000;
+			log.info("Completed servicing request in {} seconds: {}", time, auditor);
+		}
+	}
+	
+	public String username() {
+		SecurityContext context = SecurityContextHolder.getContext();
+		Authentication authentication = context.getAuthentication();
+		String username = authentication == null ? "" : authentication.getName();
+		return username == null ? "" : username;
 	}
 
 }

@@ -1,5 +1,7 @@
 package net.zoostar.hw.web.config;
 
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.zoostar.hw.exception.EntityNotFoundException;
+import net.zoostar.hw.model.User;
 import net.zoostar.hw.service.UserService;
 
 @Slf4j
@@ -23,12 +26,13 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		UsernamePasswordAuthenticationToken authenticated = null;
 		String email = authentication.getName().trim();
-		var cred = authentication.getCredentials().toString();
+		String cred = authentication.getCredentials().toString();
 		log.info("Authenticating: {}...", email);
 		try {
-			var user = userManager.retrieveByEmail(email);
+			User user = userManager.retrieveByEmail(email);
 			if("Hello!23".equals(cred)) {
-				authenticated = new UsernamePasswordAuthenticationToken(user.getEmail(), "Hello!23");
+				authenticated = new UsernamePasswordAuthenticationToken(
+						user.getEmail(), "Hello!23", Collections.emptyList());
 			} else {
 				throw new BadCredentialsException("Provided password does not equal to \"Hello!23\"");
 			}
