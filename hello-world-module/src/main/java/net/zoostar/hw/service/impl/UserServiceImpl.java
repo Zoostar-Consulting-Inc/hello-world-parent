@@ -33,10 +33,6 @@ public class UserServiceImpl implements UserService {
 	public User create(User user) throws EntityAlreadyExistsException, ValidatorException {
 		log.info("Creating entity: {}...", user);
 		
-		if(!user.isNew()) {
-			throw new EntityAlreadyExistsException(user);
-		}
-		
 		Validator<User> validator = new Validator<>() {
 			@Override
 			public void validate(User user) throws ValidatorException {

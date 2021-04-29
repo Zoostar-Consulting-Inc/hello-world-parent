@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -46,7 +45,6 @@ class ProductRestControllerTest {
 		log.info("Executing test: [{}]...", test.getDisplayName());
 		
 		GatewayAuditFilterChain filter = new GatewayAuditFilterChain();
-		Assert.assertNotNull(filter.getAuditor());
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).
 				addFilters(filter).build();
 	}
