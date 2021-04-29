@@ -21,10 +21,10 @@
 			<intercept-url pattern="/login" access="isAnonymous()"/>
 			<intercept-url pattern="/**" access="isAuthenticated()"/>
 			
-			<form-login login-page="/login" authentication-failure-url="/login?message=Authentication Failed."/>
+			<form-login login-page="/login" authentication-failure-url="/login?error=Authentication Failed."/>
 			<logout delete-cookies="JSESSIONID" logout-url="/logout"/>
 			<csrf disabled="true"/>
-			<session-management invalid-session-url="/login?message=Session Timed Out. Please Re-login."/>
+			<session-management invalid-session-url="/login?error=Session Timed Out. Please Re-login."/>
 			<access-denied-handler error-page="/accessdenied"/>
 		</http>
 	</beans:beans>

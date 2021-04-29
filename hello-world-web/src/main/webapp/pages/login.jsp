@@ -40,7 +40,6 @@
 			<h1 align="center" style="color:red"><c:out value="${param.error}"></c:out></h1>
 			<p/>
 		</c:if>
-		<%= request.getParameter("message") %>
 		<form class="form-signin" method="post">
 			<h2 class="form-signin-heading">Please sign in</h2>
             <label for="inputEmail" class="sr-only">Email address</label>
