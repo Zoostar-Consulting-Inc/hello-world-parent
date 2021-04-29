@@ -46,7 +46,7 @@ class IndexControllerTest {
 		log.info("Executing test: [{}]...", test.getDisplayName());
 		
 		GatewayAuditFilterChain filter = new GatewayAuditFilterChain();
-		Assert.assertNotNull(filter.getAuditor());
+		Assert.assertNull(GatewayAuditFilterChain.GATEWAY_AUDIT_HOLDER.get());
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).
 				addFilters(filter).build();
 	}
@@ -62,6 +62,15 @@ class IndexControllerTest {
 		assertEquals("index", modelAndView.getViewName());
 		assertEquals("test", modelAndView.getModel().get("env"));
 		assertEquals("Hello World", modelAndView.getModel().get("message"));
+	}
+
+	@Test
+	void testExcludedUrlPattern() throws Exception {
+		//WHEN
+	    MvcResult result = mockMvc.perform(get("/hw/login")).andReturn();
+	    
+		//THEN
+		assertNotNull(result);
 	}
 
 }

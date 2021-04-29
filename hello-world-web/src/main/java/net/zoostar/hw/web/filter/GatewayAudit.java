@@ -1,14 +1,12 @@
 package net.zoostar.hw.web.filter;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
 public class GatewayAudit {
 
 	private String id;
@@ -23,7 +21,4 @@ public class GatewayAudit {
 
 	private String username;
 	
-	public GatewayAudit(String id) {
-		this.id = id;
-	}
 }
