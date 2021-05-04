@@ -21,7 +21,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @Entity
-public class User implements Persistable<String> {
+public class Product implements Persistable<String> {
 
 	@Id
 	@GeneratedValue(generator="uuid")
@@ -29,15 +29,23 @@ public class User implements Persistable<String> {
 	private String id;
 	
 	@Column(nullable = false, length = 20)
-	private String email;
+	private String sku;
 	
-	@Column(nullable = true, length = 50)
+	@Column(nullable = false, length = 50)
 	private String name;
 	
-	public User(String email) {
-		this.email = email;
+	@Column(nullable = true, length = 50)
+	private String desc;
+
+	public Product(String sku) {
+		this.sku = sku;
 	}
 	
+	@Override
+	public String getId() {
+		return id;
+	}
+
 	@Override
 	public boolean isNew() {
 		return StringUtils.isBlank(id);
@@ -45,7 +53,7 @@ public class User implements Persistable<String> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(email);
+		return Objects.hash(sku);
 	}
 
 	@Override
@@ -59,8 +67,8 @@ public class User implements Persistable<String> {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		User other = (User) obj;
-		return Objects.equals(email, other.email);
+		Product other = (Product) obj;
+		return Objects.equals(sku, other.sku);
 	}
 
 }
