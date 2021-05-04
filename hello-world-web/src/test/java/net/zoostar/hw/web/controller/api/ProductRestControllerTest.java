@@ -80,7 +80,6 @@ class ProductRestControllerTest extends AbstractMockTestHarness {
 		assertEquals(request.getDesc(), product.getDesc());
 		assertEquals(request.getName(), product.getName());
 		assertEquals(request.getSku(), product.getSku());
-		assertNotEquals(product, request);
 	}
 
 	protected Product entity(String id, Product product) {
