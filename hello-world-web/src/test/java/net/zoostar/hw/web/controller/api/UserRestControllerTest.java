@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import lombok.extern.slf4j.Slf4j;
 import net.zoostar.hw.model.User;
 import net.zoostar.hw.web.AbstractMockTestHarness;
-import net.zoostar.hw.web.request.UserRequest;
+import net.zoostar.hw.web.request.RequestUser;
 
 @Slf4j
 class UserRestControllerTest extends AbstractMockTestHarness {
@@ -52,14 +52,11 @@ class UserRestControllerTest extends AbstractMockTestHarness {
 			thenReturn(savedEntity(id, entity));
 
 		//WHEN
-		UserRequest request = new UserRequest();
-		request.setEmail(entity.getEmail());
-		request.setFirstName(entity.getName());
-		request.setLastName("Last");
+		RequestUser request = new RequestUser(entity.getEmail());
+		request.setName(entity.getName());
 		ResponseEntity<User> response = controller.create(request);
 		
 		//THEN
-		assertEquals("UserRequest(email=user1@email.com, firstName=User1, lastName=Last)", request.toString());
 		assertNotNull(response);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 		User user = response.getBody();
@@ -81,7 +78,7 @@ class UserRestControllerTest extends AbstractMockTestHarness {
 	@Test
 	void testCreateWithBlankEmail() throws JsonParseException, JsonMappingException, IOException {
 		//WHEN
-		UserRequest request = new UserRequest();
+		RequestUser request = new RequestUser("");
 		ResponseEntity<User> response = controller.create(request);
 		
 		//THEN
@@ -89,6 +86,8 @@ class UserRestControllerTest extends AbstractMockTestHarness {
 		assertEquals(HttpStatus.EXPECTATION_FAILED, response.getStatusCode());
 		User user = response.getBody();
 		assertNotNull(user);
+		assertEquals(request.getEmail(), user.getEmail());
+		assertEquals(request.getName(), user.getName());
 		log.info("Retrieved entity: {}", user);
 	}
 
@@ -102,10 +101,8 @@ class UserRestControllerTest extends AbstractMockTestHarness {
 			thenReturn(savedEntity(id, entity));
 		
 		//WHEN
-		UserRequest request = new UserRequest();
-		request.setEmail(entity.getEmail());
-		request.setFirstName(entity.getName());
-		request.setLastName("Last");
+		RequestUser request = new RequestUser(entity.getEmail());
+		request.setName(entity.getName());
 		ResponseEntity<User> response = controller.create(request);
 		
 		//THEN
@@ -113,6 +110,8 @@ class UserRestControllerTest extends AbstractMockTestHarness {
 		assertEquals(HttpStatus.EXPECTATION_FAILED, response.getStatusCode());
 		User user = response.getBody();
 		assertNotNull(user);
+		assertEquals(request.getEmail(), user.getEmail());
+		assertEquals(request.getName(), user.getName());
 		log.info("Retrieved entity: {}", user);
 		assertEquals(entity.getEmail(), user.getEmail());
 	}

@@ -2,6 +2,7 @@ package net.zoostar.hw.web.filter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +20,9 @@ public class GatewayAuditFilterChain extends AbstractRequestLoggingFilter {
 	
 	private static final List<String> EXCLUDED_ENDPOINTS = Arrays.asList(
 			"/hw/signin.html", "/hw/login", "/hw/resources/css/bootstrap.min.css", 
+			"/hw/swagger-resources/configuration/ui", "/hw/webjars/springfox-swagger-ui/favicon-32x32.png",
+			"/hw/swagger-resources/configuration/security", "/hw/swagger-resources",
+			"/hw/v2/api-docs", "/hw/csrf",
 			"/hw/resources/css/ie10-viewport-bug-workaround.css", "/hw/resources/css/signin.css",
 			"/hw/resources/js/ie-emulation-modes-warning.js", "/hw/resources/js/ie10-viewport-bug-workaround.js"
 	);
@@ -29,6 +33,7 @@ public class GatewayAuditFilterChain extends AbstractRequestLoggingFilter {
 	protected void beforeRequest(HttpServletRequest request, String message) {
 		if(!exclude(request.getRequestURI())) {
 			var auditor = new GatewayAudit();
+			auditor.setId(UUID.randomUUID().toString());
 			auditor.setUsername(username());
 			auditor.setEndPoint(request.getRequestURI());
 			auditor.setRemoteAddress(request.getRemoteAddr());
@@ -52,8 +57,7 @@ public class GatewayAuditFilterChain extends AbstractRequestLoggingFilter {
 	public String username() {
 		SecurityContext context = SecurityContextHolder.getContext();
 		Authentication authentication = context.getAuthentication();
-		String username = authentication == null ? "" : authentication.getName();
-		return username == null ? "" : username;
+		return authentication == null ? "" : authentication.getName();
 	}
 
 	protected boolean exclude(String endpoint) {
