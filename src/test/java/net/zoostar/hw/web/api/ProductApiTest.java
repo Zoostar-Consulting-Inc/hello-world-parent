@@ -1,10 +1,6 @@
 package net.zoostar.hw.web.api;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.util.UUID;
@@ -65,39 +61,42 @@ class ProductApiTest {
 				andReturn();
 		
 		//then
-		assertNotNull(result);
+		assertThat(result).isNotNull();
 		log.debug("Result: {}", result);
 		
 		var response = result.getResponse();
-		assertNotNull(response);
+		assertThat(response).isNotNull();;
 		log.info("Response status: {}", response.getStatus());
-		assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
 		
 		var actual = mapper.readValue(response.getContentAsString(), Product.class);
-		assertNotNull(actual);
+		assertThat(actual.equals(null)).isFalse();
 		log.info("Created entity: {}.", actual);
+		
 		var duplicate = actual;
-		assertEquals(actual, duplicate);
-		assertNotEquals(actual, null);
-		assertEquals(entity.getClass(), actual.getClass());
-		assertEquals(entity.hashCode(), actual.hashCode());
-		assertEquals(entity.getId(), actual.getId());
-		assertEquals(entity.getName(), actual.getName());
-		assertEquals(entity.getSku(), actual.getSku());
-		assertEquals(entity.getSource(), actual.getSource());
-		assertEquals(entity.getSourceId(), actual.getSourceId());
-		assertFalse(actual.isNew());
-		assertTrue(request.toEntity().isNew());
+		assertThat(duplicate).isEqualTo(actual);
+		assertThat(actual.getClass()).isEqualTo(entity.getClass());
+		assertThat(actual.hashCode()).isEqualTo(entity.hashCode());
+		assertThat(actual.getId()).isEqualTo(entity.getId());
+		assertThat(actual.getName()).isEqualTo(entity.getName());
+		assertThat(actual.getSku()).isEqualTo(entity.getSku());
+		assertThat(actual.getSource()).isEqualTo(entity.getSource());
+		assertThat(actual.getSourceId()).isEqualTo(entity.getSourceId());
+		assertThat(actual.isNew()).isFalse();
+		assertThat(request.toEntity().isNew()).isTrue();
 		
 		entity.setSourceId(actual.getSourceId().substring(0, actual.getSourceId().length()-1));
-		assertNotEquals(entity, actual);
+		assertThat(actual).isNotEqualTo(entity);
+
 		entity.setSourceId(actual.getSourceId());
 		entity.setSource(actual.getSource().substring(0, actual.getSource().length()-1));
-		assertNotEquals(entity, actual);
+		assertThat(actual).isNotEqualTo(entity);
 		
-		var duplicateProductRequest = new ProductRequest(actual);
-		assertEquals(request, duplicateProductRequest);
-		assertEquals(request.hashCode(), duplicateProductRequest.hashCode());
+		var request2 = new ProductRequest(actual);
+		assertThat(request2).isEqualTo(request);
+		assertThat(request2.hashCode()).isEqualTo(request.hashCode());
+		var request3 = request;
+		assertThat(request3).isEqualTo(request);
 	}
 
 	protected ProductRequest toProductRequest() {
