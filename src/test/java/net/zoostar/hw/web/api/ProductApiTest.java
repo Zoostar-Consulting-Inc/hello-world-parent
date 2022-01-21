@@ -70,7 +70,7 @@ class ProductApiTest {
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
 		
 		var actual = mapper.readValue(response.getContentAsString(), Product.class);
-		assertThat(actual).isNotEqualTo(null);
+		assertThat(actual).isNotNull();
 		log.info("Created entity: {}.", actual);
 		
 		var duplicate = actual;
