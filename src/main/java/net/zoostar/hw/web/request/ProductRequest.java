@@ -21,13 +21,6 @@ public class ProductRequest implements EntityMapper<Product> {
 	
 	private String desc;
 
-	public ProductRequest(Product entity) {
-		this.desc = entity.getName();
-		this.sku = entity.getSku();
-		this.source = entity.getSource();
-		this.sourceId = entity.getSourceId();
-	}
-	
 	@Override
 	public Product toEntity() {
 		var entity = new Product();
