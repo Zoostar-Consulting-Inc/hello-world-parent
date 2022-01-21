@@ -1,6 +1,5 @@
 package net.zoostar.hw.web.request;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +11,6 @@ import net.zoostar.hw.entity.Product;
 @Setter
 @ToString
 @NoArgsConstructor
-@EqualsAndHashCode
 public class ProductRequest implements EntityMapper<Product> {
 
 	private String source;
