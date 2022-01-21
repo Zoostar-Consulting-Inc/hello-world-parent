@@ -56,8 +56,9 @@ public class Product implements Persistable<String> {
 		if (!(obj instanceof Product)) {
 			return false;
 		}
-		Product other = (Product) obj;
-		return Objects.equals(source, other.source) && Objects.equals(sourceId, other.sourceId);
+		Product that = (Product) obj;
+		return Objects.equals(source, that.source) &&
+				Objects.equals(sourceId, that.sourceId);
 	}
 
 }
