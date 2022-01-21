@@ -6,41 +6,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
+import net.zoostar.hw.AbstractHelloWorldTestHarness;
 import net.zoostar.hw.entity.Product;
-import net.zoostar.hw.repository.ProductRepository;
 import net.zoostar.hw.web.request.ProductRequest;
 
-@Slf4j
-@SpringBootTest
-@AutoConfigureMockMvc
-@ExtendWith(SpringExtension.class)
-@ExtendWith(MockitoExtension.class)
-class ProductApiTest {
+class ProductApiTest extends AbstractHelloWorldTestHarness {
 
-	@Autowired
-	protected MockMvc api;
-	
-	@Autowired
-	ObjectMapper mapper;
-
-	@MockBean
-	private ProductRepository entityRepository;
-	
 	@Test
 	void testCreate() throws Exception {
 		//given
@@ -50,7 +25,7 @@ class ProductApiTest {
 		//mock
 		var entity = request.toEntity();
 		entity.setId(UUID.randomUUID().toString());
-		Mockito.when(entityRepository.save(request.toEntity())).
+		Mockito.when(productRepository.save(request.toEntity())).
 				thenReturn(entity);
 		
 		//when
