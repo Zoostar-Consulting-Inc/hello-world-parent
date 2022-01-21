@@ -70,13 +70,13 @@ class ProductApiTest {
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
 		
 		var actual = mapper.readValue(response.getContentAsString(), Product.class);
-		assertThat(actual.equals(null)).isFalse();
+		assertThat(actual).isNotEqualTo(null);
 		log.info("Created entity: {}.", actual);
 		
 		var duplicate = actual;
 		assertThat(duplicate).isEqualTo(actual);
 		assertThat(actual.getClass()).isEqualTo(entity.getClass());
-		assertThat(actual.hashCode()).isEqualTo(entity.hashCode());
+		assertThat(actual).hasSameHashCodeAs(entity);
 		assertThat(actual.getId()).isEqualTo(entity.getId());
 		assertThat(actual.getName()).isEqualTo(entity.getName());
 		assertThat(actual.getSku()).isEqualTo(entity.getSku());
@@ -94,7 +94,7 @@ class ProductApiTest {
 		
 		var request2 = new ProductRequest(actual);
 		assertThat(request2).isEqualTo(request);
-		assertThat(request2.hashCode()).isEqualTo(request.hashCode());
+		assertThat(request2).hasSameHashCodeAs(request);
 		var request3 = request;
 		assertThat(request3).isEqualTo(request);
 	}
