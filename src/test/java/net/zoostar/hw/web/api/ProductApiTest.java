@@ -41,7 +41,7 @@ class ProductApiTest extends AbstractHelloWorldTestHarness {
 		
 		var response = result.getResponse();
 		assertThat(response).isNotNull();;
-		log.info("Response status: {}", response.getStatus());
+		log.debug("Response status: {}", response.getStatus());
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
 		
 		var actual = mapper.readValue(response.getContentAsString(), Product.class);
