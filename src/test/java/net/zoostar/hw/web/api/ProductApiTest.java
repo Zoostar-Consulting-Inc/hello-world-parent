@@ -50,7 +50,6 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<EntityRepository<Prod
 		
 		var actual = mapper.readValue(response.getContentAsString(), Product.class);
 		assertThat(actual).isNotNull();
-		assertThat(actual).isNotEqualTo(null);
 		log.info("Created entity: {}.", actual);
 		
 		var duplicate = actual;
@@ -108,7 +107,6 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<EntityRepository<Prod
 		
 		var actual = mapper.readValue(response.getContentAsString(), Product.class);
 		assertThat(actual).isNotNull();
-		assertThat(actual).isNotEqualTo(null);
 		log.info("Updated entity: {}.", actual);
 		
 		var duplicate = actual;

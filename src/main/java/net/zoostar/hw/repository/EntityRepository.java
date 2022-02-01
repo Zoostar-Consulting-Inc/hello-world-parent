@@ -4,6 +4,6 @@ import java.util.Optional;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface EntityRepository<T, ID> extends PagingAndSortingRepository<T, ID> {
-	Optional<T> findBySourceCodeAndId(String sourceCode, String sourceId);
+public interface EntityRepository<E, T> extends PagingAndSortingRepository<E, T> {
+	Optional<E> findBySourceCodeAndId(String sourceCode, String sourceId);
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/product")
 public class ProductApi extends AbstractApi<EntityRepository<Product, String>, Product, String> {
 
+	@Override
 	@GetMapping(path = "/update/{sourceCode}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Product> cudOperation(@PathVariable String sourceCode, @RequestParam String sourceId) {
 		return super.cudOperation(sourceCode, sourceId);
