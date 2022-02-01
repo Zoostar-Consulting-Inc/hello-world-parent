@@ -31,8 +31,8 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<EntityRepository<Prod
 		when(repository.save(request.toEntity())).
 				thenReturn(entity);
 		
-		when(sourceManager.create(request.getSource(), request.getSourceId())).
-				thenReturn(new ResponseEntity<>(entity, HttpStatus.CREATED));
+		when(sourceManager.create(request.getSource(), request.getSourceId(), ProductRequest.class)).
+				thenReturn(entity);
 		
 		var result = api.perform(get(url).
 				contentType(MediaType.APPLICATION_JSON).

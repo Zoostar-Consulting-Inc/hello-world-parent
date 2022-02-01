@@ -21,7 +21,7 @@ import lombok.Getter;
 public class DefaultEntityService<R extends EntityRepository<E, T>, E extends Persistable<T>, T>
 implements EntityService<R, E, T> {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Getter
 	@Autowired
@@ -30,12 +30,18 @@ implements EntityService<R, E, T> {
 	@Override
 	@Transactional(readOnly = true)
 	public E retrieve(String sourceCode, String sourceId) {
-		logger.info("Find Entity by Source Code: {} and Source ID: {}", sourceCode, sourceId);
+		log.info("Find Entity by Source Code: {} and Source ID: {}", sourceCode, sourceId);
 		Optional<E> optional = getRepository().findBySourceCodeAndId(sourceCode, sourceId);
 		if(optional.isEmpty()) {
 			throw new EntityNotFoundException(String.format("No Entity found for sourceCode: %s and sourceId: %s", sourceCode, sourceId));
 		}
 		return optional.get();
+	}
+
+	@Override
+	public E create(E entity) {
+		log.info("Persisting entity: {}...", entity);
+		return repository.save(entity);
 	}
 
 }

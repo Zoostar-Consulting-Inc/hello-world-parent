@@ -29,7 +29,7 @@ public abstract class AbstractHelloWorldTestHarness<R extends EntityRepository<E
 	protected R repository;
 
 	@MockBean
-	protected SourceService<E, T> sourceManager;
+	protected SourceService<R, E, T> sourceManager;
 	
 	@Autowired
 	protected MockMvc api;

@@ -1,7 +1,9 @@
 package net.zoostar.hw.web.api;
 
+import net.zoostar.hw.entity.EntityMapper;
 import net.zoostar.hw.entity.Product;
 import net.zoostar.hw.repository.EntityRepository;
+import net.zoostar.hw.web.request.ProductRequest;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,5 +21,10 @@ public class ProductApi extends AbstractApi<EntityRepository<Product, String>, P
 	@GetMapping(path = "/update/{sourceCode}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Product> cudOperation(@PathVariable String sourceCode, @RequestParam String sourceId) {
 		return super.cudOperation(sourceCode, sourceId);
+	}
+
+	@Override
+	protected Class<? extends EntityMapper<Product>> getEntityMapperClazz() {
+		return ProductRequest.class;
 	}
 }
