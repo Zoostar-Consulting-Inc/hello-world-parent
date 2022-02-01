@@ -1,36 +1,40 @@
 package net.zoostar.hw.web.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.util.Optional;
 import java.util.UUID;
-
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import net.zoostar.hw.AbstractHelloWorldTestHarness;
 import net.zoostar.hw.entity.Product;
+import net.zoostar.hw.repository.EntityRepository;
 import net.zoostar.hw.web.request.ProductRequest;
 
-class ProductApiTest extends AbstractHelloWorldTestHarness {
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+class ProductApiTest extends AbstractHelloWorldTestHarness<EntityRepository<Product, String>, Product, String> {
 
 	@Test
 	void testCreate() throws Exception {
 		//given
-		String url = "/api/product/create";
-		var request = toProductRequest();
+		var request = toProductRequest("source", "sourceId");
+		String url = "/api/product/update/" + request.getSource() + "?sourceId=" + request.getSourceId();
 		
-		//mock
+		//mock-when
 		var entity = request.toEntity();
 		entity.setId(UUID.randomUUID().toString());
-		Mockito.when(productRepository.save(request.toEntity())).
+		when(repository.save(request.toEntity())).
 				thenReturn(entity);
 		
-		//when
-		var result = api.perform(post(url).
-				accept(MediaType.APPLICATION_JSON).
+		when(sourceManager.create(request.getSource(), request.getSourceId())).
+				thenReturn(new ResponseEntity<>(entity, HttpStatus.CREATED));
+		
+		var result = api.perform(get(url).
 				contentType(MediaType.APPLICATION_JSON).
 				content(mapper.writeValueAsString(request))).
 				andReturn();
@@ -46,6 +50,7 @@ class ProductApiTest extends AbstractHelloWorldTestHarness {
 		
 		var actual = mapper.readValue(response.getContentAsString(), Product.class);
 		assertThat(actual).isNotNull();
+		assertThat(actual).isNotEqualTo(null);
 		log.info("Created entity: {}.", actual);
 		
 		var duplicate = actual;
@@ -68,12 +73,64 @@ class ProductApiTest extends AbstractHelloWorldTestHarness {
 		assertThat(actual).isNotEqualTo(entity);
 	}
 
-	protected ProductRequest toProductRequest() {
+	@Test
+	void testUpdate() throws Exception {
+		//given
+		var request = toProductRequest("source", "sourceId");
+		String url = "/api/product/update/" + request.getSource() + "?sourceId=" + request.getSourceId();
+		
+		//mock-when
+		var entity = request.toEntity();
+		entity.setId(UUID.randomUUID().toString());
+		when(repository.findBySourceCodeAndId(request.getSource(), request.getSourceId())).
+				thenReturn(Optional.of(entity));
+		
+		var persistable = toProductRequest(request.getSource(), request.getSourceId());
+		persistable.setDesc(persistable.getDesc() + "_update");
+		var updatedEntity = persistable.toEntity();
+		updatedEntity.setId(entity.getId());
+		when(sourceManager.update(entity)).
+				thenReturn(new ResponseEntity<>(updatedEntity, HttpStatus.OK));
+		
+		var result = api.perform(get(url).
+				contentType(MediaType.APPLICATION_JSON).
+				content(mapper.writeValueAsString(request))).
+				andReturn();
+		
+		//then
+		assertThat(result).isNotNull();
+		log.debug("Result: {}", result);
+		
+		var response = result.getResponse();
+		assertThat(response).isNotNull();;
+		log.debug("Response status: {}", response.getStatus());
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		
+		var actual = mapper.readValue(response.getContentAsString(), Product.class);
+		assertThat(actual).isNotNull();
+		assertThat(actual).isNotEqualTo(null);
+		log.info("Updated entity: {}.", actual);
+		
+		var duplicate = actual;
+		assertThat(duplicate).isEqualTo(actual);
+		assertThat(actual.getClass()).isEqualTo(updatedEntity.getClass());
+		assertThat(actual).hasSameHashCodeAs(updatedEntity);
+		assertThat(actual.getId()).isEqualTo(updatedEntity.getId());
+		assertThat(actual.getName()).isEqualTo(updatedEntity.getName());
+		assertThat(actual.getSku()).isEqualTo(updatedEntity.getSku());
+		assertThat(actual.getSource()).isEqualTo(updatedEntity.getSource());
+		assertThat(actual.getSourceId()).isEqualTo(updatedEntity.getSourceId());
+		assertThat(actual.isNew()).isFalse();
+		assertThat(request.toEntity().isNew()).isTrue();
+	}
+	
+	protected ProductRequest toProductRequest(String sourceCode, String sourceId) {
 		var request = new ProductRequest();
 		request.setDesc("This is a product description");
 		request.setSku("SKU");
-		request.setSource("source");
-		request.setSourceId("sourceId");
+		request.setSource(sourceCode);
+		request.setSourceId(sourceId);
+		log.info("Created ProductMapper: {}", request.toString());
 		return request;
 	}
 

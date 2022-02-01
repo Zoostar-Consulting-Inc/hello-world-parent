@@ -1,11 +1,12 @@
 package net.zoostar.hw.web.request;
 
+import net.zoostar.hw.entity.EntityMapper;
+import net.zoostar.hw.entity.Product;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.zoostar.hw.entity.EntityMapper;
-import net.zoostar.hw.entity.Product;
 
 @Getter
 @Setter
@@ -20,7 +21,7 @@ public class ProductRequest implements EntityMapper<Product> {
 	private String sku;
 	
 	private String desc;
-
+	
 	@Override
 	public Product toEntity() {
 		var entity = new Product();
