@@ -1,7 +1,7 @@
 package net.zoostar.hw;
 
 import net.zoostar.hw.repository.EntityRepository;
-import net.zoostar.hw.service.SourceService;
+import net.zoostar.hw.repository.SourceRepository;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Persistable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,12 +28,15 @@ public abstract class AbstractHelloWorldTestHarness<R extends EntityRepository<E
 	
 	@MockBean
 	protected R repository;
-
+	
 	@MockBean
-	protected SourceService<R, E, T> sourceManager;
+	protected SourceRepository sourceRepository;
 	
 	@Autowired
 	protected MockMvc api;
+	
+	@MockBean
+	protected RestTemplate rest;
 	
 	@Autowired
 	protected ObjectMapper mapper;

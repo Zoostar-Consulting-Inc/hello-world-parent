@@ -24,7 +24,7 @@ public class ProductApi extends AbstractApi<EntityRepository<Product, String>, P
 	}
 
 	@Override
-	protected Class<? extends EntityMapper<Product>> getEntityMapperClazz() {
+	protected Class<? extends EntityMapper<Product, String>> getEntityMapperClazz() {
 		return ProductRequest.class;
 	}
 }

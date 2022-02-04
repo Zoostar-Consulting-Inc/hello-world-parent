@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ProductRequest implements EntityMapper<Product> {
+public class ProductRequest implements EntityMapper<Product, String> {
 
 	private String source;
 	
@@ -27,7 +27,7 @@ public class ProductRequest implements EntityMapper<Product> {
 		var entity = new Product();
 		entity.setName(desc);
 		entity.setSku(sku);
-		entity.setSource(source);
+		entity.setSourceCode(source);
 		entity.setSourceId(sourceId);
 		return entity;
 	}

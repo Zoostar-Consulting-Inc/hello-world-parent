@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.domain.Persistable;
 import org.springframework.util.StringUtils;
 
 import lombok.Getter;
@@ -18,7 +17,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-public class Product implements Persistable<String> {
+public class Product implements SourceEntity<String> {
 
 	@Id
 	@GeneratedValue(generator="uuid")
@@ -27,7 +26,7 @@ public class Product implements Persistable<String> {
 	
 	private String sourceId;
 	
-	private String source;
+	private String sourceCode;
 	
 	private String sku;
 	
@@ -45,7 +44,7 @@ public class Product implements Persistable<String> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(source, sourceId);
+		return Objects.hash(sourceCode, sourceId);
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public class Product implements Persistable<String> {
 			return false;
 		}
 		Product that = (Product) obj;
-		return Objects.equals(source, that.source) &&
+		return Objects.equals(sourceCode, that.sourceCode) &&
 				Objects.equals(sourceId, that.sourceId);
 	}
 
