@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 
 public interface SourceService<R extends PagingAndSortingRepository<E, T>, E extends SourceEntity<T>, T> {
 
+	EntityService<R, E, T> getEntityManager();
+	
 	Source retrieve(String sourceCode);
 
 	ResponseEntity<? extends EntityMapper<E, T>> retrieve(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz);

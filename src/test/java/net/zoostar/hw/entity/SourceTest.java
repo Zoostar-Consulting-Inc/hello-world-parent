@@ -15,18 +15,19 @@ class SourceTest {
 		expected.setEndPoint("endPoint");
 		expected.setId(UUID.randomUUID().toString());
 		expected.setSourceCode("sourceCode");
+		assertThat(expected.isNew()).isFalse();
 		
 		var duplicate = expected;
 		assertThat(duplicate).isEqualTo(expected);
-		assertThat(duplicate.hashCode()).isEqualTo(expected.hashCode());
+		assertThat(duplicate.hashCode()).hasSameHashCodeAs(expected.hashCode());
 		
 		var actual = new Source();
 		actual.setBaseUrl("baseUrl2");
 		actual.setEndPoint("endPoint2");
-		actual.setId(UUID.randomUUID().toString());
 		actual.setSourceCode("sourceCode");
 		assertThat(actual).isEqualTo(expected);
-		assertThat(actual.hashCode()).isEqualTo(expected.hashCode());
+		assertThat(actual.hashCode()).hasSameHashCodeAs(expected.hashCode());
+		assertThat(actual.isNew()).isTrue();
 		
 		actual.setSourceCode("sourceCode2");
 		assertThat(actual).isNotEqualTo(expected);
