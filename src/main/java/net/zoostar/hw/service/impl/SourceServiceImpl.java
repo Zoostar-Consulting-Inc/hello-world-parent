@@ -12,7 +12,6 @@ import net.zoostar.hw.service.SourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -49,7 +48,7 @@ implements SourceService<R, E, T> {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public ResponseEntity<? extends EntityMapper<E, T>> retrieve(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz) {
+	public EntityMapper<E, T> retrieve(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz) {
 		Source source = retrieve(sourceCode);
 		log.info("Retrieved Entity from Repository: {}", source);
 		String url = new StringBuilder(source.getBaseUrl()).append(source.getEndPoint()).
@@ -59,23 +58,20 @@ implements SourceService<R, E, T> {
 		if(response.getStatusCode() != HttpStatus.OK && response.getBody() == null) {
 			throw new EntityNotFoundException(String.format("No entity found for source code %s and source id %s", sourceCode, sourceId));
 		}
-		return response;
+		log.info("Retrieved response from Source: {}", response);
+		return response.getBody();
 	}
 
 	@Override
 	public E create(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz) {
-		var response = retrieve(sourceCode, sourceId, clazz);
-		log.info("Retrieved response from Source: {}", response);
-		var persistable = response.getBody();
+		var persistable = retrieve(sourceCode, sourceId, clazz);
 		log.info("Retrieved Entity from Source: {}", persistable);
 		return getEntityManager().create(persistable.toEntity());
 	}
 
 	@Override
 	public E update(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz) {
-		var response = retrieve(sourceCode, sourceId, clazz);
-		log.info("Retrieved response from Source: {}", response);
-		var persistable = response.getBody();
+		var persistable = retrieve(sourceCode, sourceId, clazz);
 		log.info("Retrieved Entity from Source: {}", persistable);
 		return getEntityManager().update(persistable.toEntity());
 	}

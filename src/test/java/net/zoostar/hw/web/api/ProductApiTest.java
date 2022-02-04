@@ -34,7 +34,7 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<EntityRepository<Prod
 		
 		Source source = source(request.getSource());
 		assertThat(source.isNew()).isFalse();
-		assertThat(source.hashCode()).isNotEqualTo(0);
+		assertThat(source.hashCode()).isNotZero();
 		
 		when(sourceRepository.findBySourceCode(request.getSource())).
 				thenReturn(Optional.of(source));

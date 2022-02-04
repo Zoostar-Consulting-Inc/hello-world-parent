@@ -5,7 +5,6 @@ import net.zoostar.hw.entity.Source;
 import net.zoostar.hw.entity.SourceEntity;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.http.ResponseEntity;
 
 public interface SourceService<R extends PagingAndSortingRepository<E, T>, E extends SourceEntity<T>, T> {
 
@@ -13,7 +12,7 @@ public interface SourceService<R extends PagingAndSortingRepository<E, T>, E ext
 	
 	Source retrieve(String sourceCode);
 
-	ResponseEntity<? extends EntityMapper<E, T>> retrieve(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz);
+	EntityMapper<E, T> retrieve(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz);
 
 	E create(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz);
 

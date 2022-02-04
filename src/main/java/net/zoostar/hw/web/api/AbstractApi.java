@@ -29,14 +29,16 @@ public abstract class AbstractApi<R extends PagingAndSortingRepository<E, T>, E 
 	protected abstract Class<? extends EntityMapper<E, T>> getEntityMapperClazz();
 	
 	protected ResponseEntity<E> cudOperation(String sourceCode, String sourceId) {
-		sanitizeLogging(sourceCode, sourceId);
+		sourceCode = sanitize(sourceCode);
+		sourceId = sanitize(sourceId);
 		ResponseEntity<E> response = null;
 		if(getEntityManager().exists(sourceCode, sourceId)) {
-			log.info("Entity exists for source code: {} and source id: {}", sourceCode, sourceId);
+			log.info("{}", "Entity exists.");
 			response = new ResponseEntity<>(
 					sourceManager.update(sourceCode, sourceId, getEntityMapperClazz()),
 					HttpStatus.OK);
 		} else {
+			log.info("{}", "Entity does not exist.");
 			response = new ResponseEntity<>(
 					getSourceManager().create(sourceCode, sourceId, getEntityMapperClazz()),
 					HttpStatus.CREATED);
@@ -45,10 +47,7 @@ public abstract class AbstractApi<R extends PagingAndSortingRepository<E, T>, E 
 		return response;
 	}
 
-	private void sanitizeLogging(String sourceCode, String sourceId) {
-		var param1 = sourceCode.replaceAll("[\n\r\t]", "_");
-		var param2 = sourceId.replaceAll("[\n\r\t]", "_");
-		log.info("Evaluating type of operation for source code {} and source id {}...", param1, param2);
+	private String sanitize(String dirty) {
+		return dirty.replaceAll("[\n\r\t]", "_");
 	}
-	
 }
