@@ -68,7 +68,7 @@ implements SourceService<R, E, T> {
 		log.info("Retrieved response from Source: {}", response);
 		var persistable = response.getBody();
 		log.info("Retrieved Entity from Source: {}", persistable);
-		return entityManager.create(persistable.toEntity());
+		return getEntityManager().create(persistable.toEntity());
 	}
 
 	@Override
@@ -77,7 +77,7 @@ implements SourceService<R, E, T> {
 		log.info("Retrieved response from Source: {}", response);
 		var persistable = response.getBody();
 		log.info("Retrieved Entity from Source: {}", persistable);
-		return entityManager.update(persistable.toEntity());
+		return getEntityManager().update(persistable.toEntity());
 	}
 
 }
