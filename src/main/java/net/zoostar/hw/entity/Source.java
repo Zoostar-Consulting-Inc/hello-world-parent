@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.domain.Persistable;
 import org.springframework.util.StringUtils;
 
 import lombok.Getter;
@@ -17,21 +18,19 @@ import lombok.ToString;
 @Setter
 @Entity
 @ToString
-public class Product implements SourceEntity<String> {
+public class Source implements Persistable<String> {
 
 	@Id
 	@GeneratedValue(generator="uuid")
 	@GenericGenerator(name="uuid", strategy="uuid2")
 	private String id;
-	
-	private String sourceId;
-	
+
 	private String sourceCode;
 	
-	private String sku;
+	private String baseUrl;
 	
-	private String name;
-	
+	private String endPoint;
+
 	@Override
 	public String getId() {
 		return this.id;
@@ -44,7 +43,7 @@ public class Product implements SourceEntity<String> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(sourceCode, sourceId);
+		return Objects.hash(sourceCode);
 	}
 
 	@Override
@@ -52,12 +51,11 @@ public class Product implements SourceEntity<String> {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof Product)) {
+		if (!(obj instanceof Source)) {
 			return false;
 		}
-		Product that = (Product) obj;
-		return Objects.equals(sourceCode, that.sourceCode) &&
-				Objects.equals(sourceId, that.sourceId);
+		Source other = (Source) obj;
+		return Objects.equals(sourceCode, other.sourceCode);
 	}
 
 }

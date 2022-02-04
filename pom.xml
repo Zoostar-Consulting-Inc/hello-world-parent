@@ -68,6 +68,9 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<configuration>
 					<append>true</append>
+					<excludes>
+						<exclude>**/HelloWorldApp.class</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>
@@ -101,7 +104,7 @@
 								<rule>
 									<element>CLASS</element>
 									<excludes>
-										<exclude>*Test</exclude>
+										<exclude>**/HelloWorldApp.class</exclude>
 									</excludes>
 									<limits>
 										<limit>
