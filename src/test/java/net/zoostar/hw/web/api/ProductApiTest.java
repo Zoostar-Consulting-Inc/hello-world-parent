@@ -8,22 +8,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 import net.zoostar.hw.AbstractHelloWorldTestHarness;
-import net.zoostar.hw.HelloWorldApp;
 import net.zoostar.hw.entity.Product;
 import net.zoostar.hw.entity.Source;
 import net.zoostar.hw.web.request.ProductRequest;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 	
-	@Value("${env.type}")
-	protected String envType;
-
 	@Test
 	void testCreate() throws Exception {
 		//given
@@ -174,13 +169,6 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		assertThat(response).isNotNull();
 		log.debug("Response status: {}", response.getStatus());
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
-	}
-	
-	@Test
-	void testEnvType() {
-		String[] args = new String[0];
-		HelloWorldApp.main(args);
-		assertThat(envType).isEqualTo("test");
 	}
 	
 	protected ProductRequest toProductRequest(String sourceCode, String sourceId) {
