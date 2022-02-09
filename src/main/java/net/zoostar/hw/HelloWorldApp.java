@@ -1,6 +1,5 @@
 package net.zoostar.hw;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -17,9 +16,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 @EntityScan(basePackages = {"net.zoostar.hw.entity"})
 @EnableJpaRepositories(basePackages = {"net.zoostar.hw.repository"})
 public class HelloWorldApp {
-	
-	@Value("${env.type}")
-	protected String envType;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(HelloWorldApp.class, args);
