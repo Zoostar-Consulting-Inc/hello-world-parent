@@ -15,8 +15,8 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @Entity
+@ToString
 public class Product implements SourceEntity<String> {
 
 	@Id

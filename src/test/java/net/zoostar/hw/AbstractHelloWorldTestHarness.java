@@ -1,6 +1,6 @@
 package net.zoostar.hw;
 
-import net.zoostar.hw.repository.EntityRepository;
+import net.zoostar.hw.repository.ProductRepository;
 import net.zoostar.hw.repository.SourceRepository;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,12 +22,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
-public abstract class AbstractHelloWorldTestHarness<R extends EntityRepository<E, T>, E extends Persistable<T>, T> {
+public abstract class AbstractHelloWorldTestHarness<E extends Persistable<T>, T> {
 
 	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@MockBean
-	protected R repository;
+	protected ProductRepository repository;
 	
 	@MockBean
 	protected SourceRepository sourceRepository;

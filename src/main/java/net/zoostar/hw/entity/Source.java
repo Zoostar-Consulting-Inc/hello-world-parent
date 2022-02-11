@@ -16,8 +16,8 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @Entity
+@ToString
 public class Source implements Persistable<String> {
 
 	@Id

@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.client.RestTemplate;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -15,7 +16,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 @EntityScan(basePackages = {"net.zoostar.hw.entity"})
 @EnableJpaRepositories(basePackages = {"net.zoostar.hw.repository"})
 public class HelloWorldApp {
-
+	
 	public static void main(String[] args) {
 		SpringApplication.run(HelloWorldApp.class, args);
 	}
@@ -27,5 +28,10 @@ public class HelloWorldApp {
 				apis(RequestHandlerSelectors.any()).
 				paths(PathSelectors.any()).
 				build();
+	}
+	
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 }

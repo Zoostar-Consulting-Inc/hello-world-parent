@@ -10,8 +10,8 @@ import net.zoostar.hw.service.EntityService;
 import net.zoostar.hw.service.SourceService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -22,15 +22,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @Transactional
-public class SourceServiceImpl<R extends PagingAndSortingRepository<E, T>, E extends SourceEntity<T>, T>
-implements SourceService<R, E, T> {
+public class SourceServiceImpl<E extends SourceEntity<T>, T>
+implements SourceService<E, T> {
 
 	@Autowired
 	protected SourceRepository repository;
 	
 	@Getter
 	@Autowired
-	protected EntityService<R, E, T> entityManager;
+	protected EntityService<E, T> entityManager;
 	
 	@Autowired
 	protected RestTemplate api;
@@ -70,10 +70,18 @@ implements SourceService<R, E, T> {
 	}
 
 	@Override
-	public E update(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz) {
-		var persistable = retrieve(sourceCode, sourceId, clazz);
-		log.info("Retrieved Entity from Source: {}", persistable);
-		return getEntityManager().update(persistable.toEntity());
+	public ResponseEntity<E> update(E entity, Class<? extends EntityMapper<E, T>> clazz) {
+		ResponseEntity<E> response = null;
+		try {
+			var persistable = retrieve(entity.getSourceCode(), entity.getSourceId(), clazz);
+			log.info("Retrieved Entity from Source: {}", persistable);
+			response = new ResponseEntity<>(getEntityManager().update(entity, persistable.toEntity()), HttpStatus.OK);
+		} catch (EntityNotFoundException e) {
+			log.info("{}", "Deleting Entity not found in source...");
+			getEntityManager().delete(entity.getId());
+			response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return response;
 	}
 
 }
