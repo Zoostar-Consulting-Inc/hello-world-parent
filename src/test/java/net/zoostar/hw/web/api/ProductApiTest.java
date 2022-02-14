@@ -10,14 +10,21 @@ import java.util.UUID;
 import net.zoostar.hw.AbstractHelloWorldTestHarness;
 import net.zoostar.hw.entity.Product;
 import net.zoostar.hw.entity.Source;
+import net.zoostar.hw.service.SourceService;
 import net.zoostar.hw.web.request.ProductRequest;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
+	
+	@Autowired
+	protected SourceService<Product, String> sourceManager;
 	
 	@Test
 	void testCreate() throws Exception {
@@ -26,19 +33,22 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		String url = "/api/product/update/" + request.getSource() + "?sourceId=" + request.getSourceId();
 		
 		//mock-when
-		var entity = request.toEntity();
-		entity.setId(UUID.randomUUID().toString());
-		when(repository.save(request.toEntity())).
-				thenReturn(entity);
-		
 		Source source = source(request.getSource());
 		assertThat(source.isNew()).isFalse();
 		assertThat(source.hashCode()).isNotZero();
 		
 		when(sourceRepository.findBySourceCode(request.getSource())).
 				thenReturn(Optional.of(source));
-		when(rest.getForEntity(source.getBaseUrl() + source.getEndPoint() + "?id=" + request.getSourceId(), ProductRequest.class)).
-				thenReturn(new ResponseEntity<>(request, HttpStatus.OK));
+		
+		var headers = new HttpHeaders();
+		headers.add(SourceService.CONTENT_ENCODING, SourceService.GZIP);
+		when(rest.getForEntity(Mockito.eq(source.getBaseUrl() + source.getEndPoint() + "?id=" + request.getSourceId()),
+				Mockito.eq(ProductRequest.class), Mockito.any(HttpHeaders.class))).thenReturn(new ResponseEntity<>(request, HttpStatus.OK));
+		
+		var entity = request.toEntity();
+		entity.setId(UUID.randomUUID().toString());
+		when(repository.save(request.toEntity())).
+				thenReturn(entity);
 		
 		var result = api.perform(get(url).
 				contentType(MediaType.APPLICATION_JSON).
@@ -97,8 +107,8 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 	
 		var persistable = toProductRequest(request.getSource(), request.getSourceId());
 		persistable.setDesc(persistable.getDesc() + "_update");
-		when(rest.getForEntity(source.getBaseUrl() + source.getEndPoint() + "?id=" + request.getSourceId(), ProductRequest.class)).
-				thenReturn(new ResponseEntity<>(persistable, HttpStatus.OK));
+		when(rest.getForEntity(Mockito.eq(source.getBaseUrl() + source.getEndPoint() + "?id=" + request.getSourceId()),
+				Mockito.eq(ProductRequest.class), Mockito.any(HttpHeaders.class))).thenReturn(new ResponseEntity<>(persistable, HttpStatus.OK));
 		
 		var updatedEntity = persistable.toEntity();
 		updatedEntity.setId(entity.getId());
@@ -153,8 +163,8 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		when(sourceRepository.findBySourceCode(request.getSource())).
 				thenReturn(Optional.of(source));
 	
-		when(rest.getForEntity(source.getBaseUrl() + source.getEndPoint() + "?id=" + request.getSourceId(), ProductRequest.class)).
-				thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+		when(rest.getForEntity(Mockito.eq(source.getBaseUrl() + source.getEndPoint() + "?id=" + request.getSourceId()),
+				Mockito.eq(ProductRequest.class), Mockito.any(HttpHeaders.class))).thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
 		
 		var result = api.perform(get(url).
 				contentType(MediaType.APPLICATION_JSON).
@@ -189,5 +199,5 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		source.setSourceCode(sourceCode);
 		return source;
 	}
-
+	
 }

@@ -1,10 +1,16 @@
 package net.zoostar.hw;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.zoostar.hw.web.interceptor.GZIPClientHttpRequestInterceptor;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 
 import springfox.documentation.builders.PathSelectors;
@@ -32,6 +38,15 @@ public class HelloWorldApp {
 	
 	@Bean
 	public RestTemplate restTemplate() {
-		return new RestTemplate();
+		var bean = new RestTemplate();
+		bean.setInterceptors(interceptorBuilder());
+		return bean;
 	}
+
+	private List<ClientHttpRequestInterceptor> interceptorBuilder() {
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+		interceptors.add(new GZIPClientHttpRequestInterceptor());
+		return interceptors;
+	}
+
 }
