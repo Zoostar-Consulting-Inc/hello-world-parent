@@ -40,5 +40,5 @@ public abstract class AbstractHelloWorldTestHarness<E extends Persistable<T>, T>
 	
 	@Autowired
 	protected ObjectMapper mapper;
-
+	
 }

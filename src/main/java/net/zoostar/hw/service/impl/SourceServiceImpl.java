@@ -9,7 +9,9 @@ import net.zoostar.hw.repository.SourceRepository;
 import net.zoostar.hw.service.EntityService;
 import net.zoostar.hw.service.SourceService;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,9 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional
 public class SourceServiceImpl<E extends SourceEntity<T>, T>
-implements SourceService<E, T> {
+implements SourceService<E, T>, InitializingBean {
 
-	@Autowired
+    @Autowired
 	protected SourceRepository repository;
 	
 	@Getter
@@ -34,6 +36,9 @@ implements SourceService<E, T> {
 	
 	@Autowired
 	protected RestTemplate api;
+	
+	@Getter
+	private HttpHeaders headers;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -54,7 +59,7 @@ implements SourceService<E, T> {
 		String url = new StringBuilder(source.getBaseUrl()).append(source.getEndPoint()).
 				append("?id=").append(sourceId).toString();
 		log.info("Fetching entity from source: {}...", url);
-		var response = api.getForEntity(url, clazz);
+		var response = api.getForEntity(url, clazz, headers);
 		if(response.getStatusCode() != HttpStatus.OK && response.getBody() == null) {
 			throw new EntityNotFoundException(String.format("No entity found for source code %s and source id %s", sourceCode, sourceId));
 		}
@@ -82,6 +87,17 @@ implements SourceService<E, T> {
 			response = new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		return response;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		initializeHttpHeaders();
+	}
+
+	protected void initializeHttpHeaders() {
+		headers = new HttpHeaders();
+		headers.add(ACCEPT_ENCODING, GZIP);
+		log.debug("Http Headers initialized: {}", headers);
 	}
 
 }

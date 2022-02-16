@@ -7,6 +7,10 @@ import net.zoostar.hw.entity.SourceEntity;
 import org.springframework.http.ResponseEntity;
 
 public interface SourceService<E extends SourceEntity<T>, T> {
+    
+    String GZIP = "gzip";
+    String CONTENT_ENCODING = "Content-Encoding";
+	String ACCEPT_ENCODING = "Accept-Encoding";
 
 	EntityService<E, T> getEntityManager();
 	
