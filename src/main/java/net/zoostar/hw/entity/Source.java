@@ -29,8 +29,6 @@ public class Source implements Persistable<String> {
 	
 	private String baseUrl;
 	
-	private String endPoint;
-
 	@Override
 	public String getId() {
 		return this.id;

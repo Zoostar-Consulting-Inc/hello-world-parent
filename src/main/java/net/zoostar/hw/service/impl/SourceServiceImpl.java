@@ -2,9 +2,9 @@ package net.zoostar.hw.service.impl;
 
 import javax.persistence.EntityNotFoundException;
 
-import net.zoostar.hw.entity.EntityMapper;
 import net.zoostar.hw.entity.Source;
 import net.zoostar.hw.entity.SourceEntity;
+import net.zoostar.hw.entity.SourceEntityMapper;
 import net.zoostar.hw.repository.SourceRepository;
 import net.zoostar.hw.service.EntityService;
 import net.zoostar.hw.service.SourceService;
@@ -37,8 +37,7 @@ implements SourceService<E, T>, InitializingBean {
 	@Autowired
 	protected RestTemplate api;
 	
-	@Getter
-	private HttpHeaders headers;
+	protected HttpHeaders headers;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -53,10 +52,11 @@ implements SourceService<E, T>, InitializingBean {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public EntityMapper<E, T> retrieve(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz) {
+	public SourceEntityMapper<E, T> retrieve(String sourceCode, String sourceId,
+			String endPoint, Class<? extends SourceEntityMapper<E, T>> clazz) {
 		Source source = retrieve(sourceCode);
 		log.info("Retrieved Entity from Repository: {}", source);
-		String url = new StringBuilder(source.getBaseUrl()).append(source.getEndPoint()).
+		String url = new StringBuilder(source.getBaseUrl()).append(endPoint).
 				append("?id=").append(sourceId).toString();
 		log.info("Fetching entity from source: {}...", url);
 		var response = api.getForEntity(url, clazz, headers);
@@ -68,17 +68,18 @@ implements SourceService<E, T>, InitializingBean {
 	}
 
 	@Override
-	public E create(String sourceCode, String sourceId, Class<? extends EntityMapper<E, T>> clazz) {
-		var persistable = retrieve(sourceCode, sourceId, clazz);
+	public E create(String sourceCode, String sourceId,
+			String endPoint, Class<? extends SourceEntityMapper<E, T>> clazz) {
+		var persistable = retrieve(sourceCode, sourceId, endPoint, clazz);
 		log.info("Retrieved Entity from Source: {}", persistable);
 		return getEntityManager().create(persistable.toEntity());
 	}
 
 	@Override
-	public ResponseEntity<E> update(E entity, Class<? extends EntityMapper<E, T>> clazz) {
+	public ResponseEntity<E> update(E entity, String endPoint, Class<? extends SourceEntityMapper<E, T>> clazz) {
 		ResponseEntity<E> response = null;
 		try {
-			var persistable = retrieve(entity.getSourceCode(), entity.getSourceId(), clazz);
+			var persistable = retrieve(entity.getSourceCode(), entity.getSourceId(), endPoint, clazz);
 			log.info("Retrieved Entity from Source: {}", persistable);
 			response = new ResponseEntity<>(getEntityManager().update(entity, persistable.toEntity()), HttpStatus.OK);
 		} catch (EntityNotFoundException e) {
@@ -98,6 +99,12 @@ implements SourceService<E, T>, InitializingBean {
 		headers = new HttpHeaders();
 		headers.add(ACCEPT_ENCODING, GZIP);
 		log.debug("Http Headers initialized: {}", headers);
+	}
+
+	@Override
+	public Source create(Source source) {
+		log.info("Saving new entity: {}...", source);
+		return repository.save(source);
 	}
 
 }

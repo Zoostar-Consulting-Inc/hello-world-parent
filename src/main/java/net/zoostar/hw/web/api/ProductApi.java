@@ -1,7 +1,7 @@
 package net.zoostar.hw.web.api;
 
-import net.zoostar.hw.entity.EntityMapper;
 import net.zoostar.hw.entity.Product;
+import net.zoostar.hw.entity.SourceEntityMapper;
 import net.zoostar.hw.web.request.ProductRequest;
 
 import org.springframework.http.MediaType;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/product")
-public class ProductApi extends AbstractApi<Product, String> {
+public class ProductApi extends AbstractSourceApi<Product, String> {
 
 	@Override
 	@GetMapping(path = "/update/{sourceCode}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -23,7 +23,12 @@ public class ProductApi extends AbstractApi<Product, String> {
 	}
 
 	@Override
-	protected Class<? extends EntityMapper<Product, String>> getEntityMapperClazz() {
+	protected Class<? extends SourceEntityMapper<Product, String>> getEntityMapperClazz() {
 		return ProductRequest.class;
+	}
+
+	@Override
+	protected String getEndPoint() {
+		return "/product/retrieve";
 	}
 }

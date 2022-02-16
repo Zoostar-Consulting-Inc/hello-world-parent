@@ -1,5 +1,8 @@
 package net.zoostar.hw;
 
+import java.util.UUID;
+
+import net.zoostar.hw.entity.Source;
 import net.zoostar.hw.repository.ProductRepository;
 import net.zoostar.hw.repository.SourceRepository;
 
@@ -33,12 +36,20 @@ public abstract class AbstractHelloWorldTestHarness<E extends Persistable<T>, T>
 	protected SourceRepository sourceRepository;
 	
 	@Autowired
-	protected MockMvc api;
+	protected MockMvc service;
 	
 	@MockBean
 	protected RestTemplate rest;
 	
 	@Autowired
 	protected ObjectMapper mapper;
+	
+	protected Source toSource(String sourceCode) {
+		var source = new Source();
+		source.setBaseUrl("/" + sourceCode);
+		source.setId(UUID.randomUUID().toString());
+		source.setSourceCode(sourceCode);
+		return source;
+	}
 	
 }

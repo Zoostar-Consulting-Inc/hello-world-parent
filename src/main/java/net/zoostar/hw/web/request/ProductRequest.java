@@ -1,6 +1,6 @@
 package net.zoostar.hw.web.request;
 
-import net.zoostar.hw.entity.EntityMapper;
+import net.zoostar.hw.entity.SourceEntityMapper;
 import net.zoostar.hw.entity.Product;
 
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ProductRequest implements EntityMapper<Product, String> {
+public class ProductRequest implements SourceEntityMapper<Product, String> {
 
 	private String source;
 	
