@@ -1,0 +1,79 @@
+[
+  {
+    "id": "1",
+    "sourceId": "mdm1",
+    "source": "MDM",
+    "sku": "mdm-sku-1",
+    "name": "MDM SKU 1"
+  },
+  {
+    "id": "2",
+    "sourceId": "mdm2",
+    "source": "MDM",
+    "sku": "mdm-sku-2",
+    "name": "MDM SKU 2"
+  },
+  {
+    "id": "3",
+    "sourceId": "mdm3",
+    "source": "MDM",
+    "sku": "mdm-sku-3",
+    "name": "MDM SKU 3"
+  },
+  {
+    "id": "4",
+    "sourceId": "mdm4",
+    "source": "MDM",
+    "sku": "mdm-sku-4",
+    "name": "MDM SKU 4"
+  },
+  {
+    "id": "5",
+    "sourceId": "mdm5",
+    "source": "MDM",
+    "sku": "mdm-sku-5",
+    "name": "MDM SKU 5"
+  },
+  {
+    "id": "6",
+    "sourceId": "mdm6",
+    "source": "MDM",
+    "sku": "mdm-sku-6",
+    "name": "MDM SKU 6"
+  },
+  {
+    "id": "7",
+    "sourceId": "sjde1",
+    "source": "SJDE",
+    "sku": "sjde-sku-1",
+    "name": "SJDE SKU 1"
+  },
+  {
+    "id": "8",
+    "sourceId": "sjde2",
+    "source": "SJDE",
+    "sku": "sjde-sku-2",
+    "name": "SJDE SKU 2"
+  },
+  {
+    "id": "9",
+    "sourceId": "sjde3",
+    "source": "SJDE",
+    "sku": "sjde-sku-3",
+    "name": "SJDE SKU 3"
+  },
+  {
+    "id": "10",
+    "sourceId": "sjde4",
+    "source": "SJDE",
+    "sku": "sjde-sku-4",
+    "name": "SJDE SKU 4"
+  },
+  {
+    "id": "11",
+    "sourceId": "sjde5",
+    "source": "SJDE",
+    "sku": "sjde-sku-5",
+    "name": "SJDE SKU 5"
+  }
+]

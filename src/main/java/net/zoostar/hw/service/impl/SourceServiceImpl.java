@@ -11,6 +11,8 @@ import net.zoostar.hw.service.SourceService;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,8 +58,8 @@ implements SourceService<E, T>, InitializingBean {
 			String endPoint, Class<? extends SourceEntityMapper<E, T>> clazz) {
 		Source source = retrieve(sourceCode);
 		log.info("Retrieved Entity from Repository: {}", source);
-		String url = new StringBuilder(source.getBaseUrl()).append(endPoint).
-				append("?id=").append(sourceId).toString();
+		String url = new StringBuilder(PROTOCOL).append(source.getBaseUrl()).
+				append(endPoint).append("?id=").append(sourceId).toString();
 		log.info("Fetching entity from source: {}...", url);
 		var response = api.getForEntity(url, clazz, headers);
 		if(response.getStatusCode() != HttpStatus.OK && response.getBody() == null) {
@@ -105,6 +107,13 @@ implements SourceService<E, T>, InitializingBean {
 	public Source create(Source source) {
 		log.info("Saving new entity: {}...", source);
 		return repository.save(source);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Page<Source> retrieve(int pageNum, int pageSize) {
+		log.info("Retrieving a max of {} records for page {}...", pageSize, pageNum);
+		return repository.findAll(PageRequest.of(pageNum, pageSize));
 	}
 
 }
