@@ -27,6 +27,8 @@ public class Source implements Persistable<String> {
 
 	private String sourceCode;
 	
+	private String name;
+	
 	private String baseUrl;
 	
 	@Override

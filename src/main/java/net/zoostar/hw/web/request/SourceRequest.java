@@ -17,10 +17,13 @@ public class SourceRequest implements PersistableEntityMapper<Source, String> {
 	private String sourceCode;
 	
 	private String baseUrl;
+	
+	private String name;
 
 	public SourceRequest(Source source) {
 		this.sourceCode = source.getSourceCode();
 		this.baseUrl = source.getBaseUrl();
+		this.name = source.getName();
 	}
 	
 	@Override
@@ -28,6 +31,7 @@ public class SourceRequest implements PersistableEntityMapper<Source, String> {
 		var entity = new Source();
 		entity.setBaseUrl(baseUrl);
 		entity.setSourceCode(sourceCode);
+		entity.setName(name);
 		return entity;
 	}
 
