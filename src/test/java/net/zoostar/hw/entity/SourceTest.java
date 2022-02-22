@@ -12,7 +12,6 @@ class SourceTest {
 	void test() {
 		var expected = new Source();
 		expected.setBaseUrl("baseUrl");
-		expected.setEndPoint("endPoint");
 		expected.setId(UUID.randomUUID().toString());
 		expected.setSourceCode("sourceCode");
 		assertThat(expected.isNew()).isFalse();
@@ -23,7 +22,6 @@ class SourceTest {
 		
 		var actual = new Source();
 		actual.setBaseUrl("baseUrl2");
-		actual.setEndPoint("endPoint2");
 		actual.setSourceCode("sourceCode");
 		assertThat(actual).isEqualTo(expected);
 		assertThat(actual.hashCode()).hasSameHashCodeAs(expected.hashCode());

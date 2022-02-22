@@ -1,9 +1,11 @@
 package net.zoostar.hw.web.api;
 
+import static net.zoostar.hw.service.SourceService.PROTOCOL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 	
 	@Autowired
@@ -33,7 +37,7 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		String url = "/api/product/update/" + request.getSource() + "?sourceId=" + request.getSourceId();
 		
 		//mock-when
-		Source source = source(request.getSource());
+		Source source = toSource(request.getSource());
 		assertThat(source.isNew()).isFalse();
 		assertThat(source.hashCode()).isNotZero();
 		
@@ -42,7 +46,7 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		
 		var headers = new HttpHeaders();
 		headers.add(SourceService.CONTENT_ENCODING, SourceService.GZIP);
-		when(rest.getForEntity(Mockito.eq(source.getBaseUrl() + source.getEndPoint() + "?id=" + request.getSourceId()),
+		when(rest.getForEntity(Mockito.eq(PROTOCOL + source.getBaseUrl() + "/product/retrieve?id=" + request.getSourceId()),
 				Mockito.eq(ProductRequest.class), Mockito.any(HttpHeaders.class))).thenReturn(new ResponseEntity<>(request, HttpStatus.OK));
 		
 		var entity = request.toEntity();
@@ -50,7 +54,7 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		when(repository.save(request.toEntity())).
 				thenReturn(entity);
 		
-		var result = api.perform(get(url).
+		var result = service.perform(get(url).
 				contentType(MediaType.APPLICATION_JSON).
 				content(mapper.writeValueAsString(request))).
 				andReturn();
@@ -100,14 +104,14 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		when(repository.findBySourceCodeAndId(request.getSource(), request.getSourceId())).
 				thenReturn(Optional.of(entity));
 
-		var source = source(request.getSource());
+		var source = toSource(request.getSource());
 		assertThat(source.isNew()).isFalse();
 		when(sourceRepository.findBySourceCode(request.getSource())).
 				thenReturn(Optional.of(source));
 	
 		var persistable = toProductRequest(request.getSource(), request.getSourceId());
 		persistable.setDesc(persistable.getDesc() + "_update");
-		when(rest.getForEntity(Mockito.eq(source.getBaseUrl() + source.getEndPoint() + "?id=" + request.getSourceId()),
+		when(rest.getForEntity(Mockito.eq(PROTOCOL + source.getBaseUrl() + "/product/retrieve?id=" + request.getSourceId()),
 				Mockito.eq(ProductRequest.class), Mockito.any(HttpHeaders.class))).thenReturn(new ResponseEntity<>(persistable, HttpStatus.OK));
 		
 		var updatedEntity = persistable.toEntity();
@@ -115,7 +119,7 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		when(repository.save(updatedEntity)).
 				thenReturn(updatedEntity);
 		
-		var result = api.perform(get(url).
+		var result = service.perform(get(url).
 				contentType(MediaType.APPLICATION_JSON).
 				content(mapper.writeValueAsString(request))).
 				andReturn();
@@ -158,15 +162,15 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		when(repository.findBySourceCodeAndId(request.getSource(), request.getSourceId())).
 				thenReturn(Optional.of(entity));
 
-		var source = source(request.getSource());
+		var source = toSource(request.getSource());
 		assertThat(source.isNew()).isFalse();
 		when(sourceRepository.findBySourceCode(request.getSource())).
 				thenReturn(Optional.of(source));
 	
-		when(rest.getForEntity(Mockito.eq(source.getBaseUrl() + source.getEndPoint() + "?id=" + request.getSourceId()),
+		when(rest.getForEntity(Mockito.eq(PROTOCOL + source.getBaseUrl() + "/product/retrieve?id=" + request.getSourceId()),
 				Mockito.eq(ProductRequest.class), Mockito.any(HttpHeaders.class))).thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
 		
-		var result = api.perform(get(url).
+		var result = service.perform(get(url).
 				contentType(MediaType.APPLICATION_JSON).
 				content(mapper.writeValueAsString(request))).
 				andReturn();
@@ -191,13 +195,16 @@ class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
 		return request;
 	}
 
-	private Source source(String sourceCode) {
-		var source = new Source();
-		source.setBaseUrl("/" + sourceCode);
-		source.setEndPoint("/product/retrieve");
-		source.setId(UUID.randomUUID().toString());
-		source.setSourceCode(sourceCode);
-		return source;
+	@Override
+	protected String getResourcePath() {
+		String resourcePath = "data/products.json";
+		log.info("Loading records from resource path: {}", resourcePath);
+		return resourcePath;
+	}
+
+	@Override
+	protected TypeReference<List<Product>> getListTypeReference() {
+		return new TypeReference<>() {};
 	}
 	
 }
