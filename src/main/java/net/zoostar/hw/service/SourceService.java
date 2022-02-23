@@ -1,5 +1,7 @@
 package net.zoostar.hw.service;
 
+import javax.xml.bind.ValidationException;
+
 import net.zoostar.hw.entity.Source;
 import net.zoostar.hw.entity.SourceEntity;
 import net.zoostar.hw.entity.SourceEntityMapper;
@@ -20,7 +22,7 @@ public interface SourceService<E extends SourceEntity<T>, T> {
 	
 	Source retrieve(String sourceCode);
 
-	Source update(Source source);
+	Source update(Source source) throws ValidationException;
 	
 	SourceEntityMapper<E, T> retrieve(String sourceCode, String sourceId,
 			String endPoint, Class<? extends SourceEntityMapper<E, T>> clazz);

@@ -200,6 +200,26 @@ class SourceApiTest extends AbstractMockTestHarness<Source, String> {
 		}
 	}
 	
+	@Test
+	void testUpdateThrowingRequiredFieldValidationException() throws Exception {
+		//given
+		var request = new SourceRequest(toSource(""));
+		String url = "/api/source/update";
+
+		//mock-when
+		var result = service.perform(MockMvcRequestBuilders.post(url).
+				contentType(MediaType.APPLICATION_JSON).
+				content(mapper.writeValueAsString(request)).
+				accept(MediaType.APPLICATION_JSON)).
+				andReturn();
+		
+		//then
+		assertThat(result).isNotNull();
+		var response = result.getResponse();
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+		log.warn("{}", response.getErrorMessage());
+	}
+	
 	private void testRetrieveByFirstPage(int pageNum) throws Exception {
 		testRetrieveByPage(pageNum, PAGE_LIMIT);
 	}

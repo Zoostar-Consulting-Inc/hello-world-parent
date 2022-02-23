@@ -2,6 +2,7 @@ package net.zoostar.hw.web.api;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.xml.bind.ValidationException;
 
 import net.zoostar.hw.entity.Source;
 import net.zoostar.hw.entity.SourceEntity;
@@ -56,7 +57,7 @@ public class SourceApi<E extends SourceEntity<T>, T> {
 		ResponseEntity<Source> response = null;
 		try {
 			response = new ResponseEntity<>(sourceManager.update(request.toEntity()), HttpStatus.OK);
-		} catch(EntityNotFoundException e) {
+		} catch(EntityNotFoundException | ValidationException e) {
 			log.warn(e.getMessage());
 			response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
