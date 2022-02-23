@@ -20,6 +20,8 @@ public interface SourceService<E extends SourceEntity<T>, T> {
 	
 	Source retrieve(String sourceCode);
 
+	Source update(Source source);
+	
 	SourceEntityMapper<E, T> retrieve(String sourceCode, String sourceId,
 			String endPoint, Class<? extends SourceEntityMapper<E, T>> clazz);
 

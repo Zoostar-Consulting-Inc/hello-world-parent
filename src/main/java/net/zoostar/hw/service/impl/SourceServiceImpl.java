@@ -1,5 +1,6 @@
 package net.zoostar.hw.service.impl;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 import net.zoostar.hw.entity.Source;
@@ -106,6 +107,10 @@ implements SourceService<E, T>, InitializingBean {
 	@Override
 	public Source create(Source source) {
 		log.info("Saving new entity: {}...", source);
+		var entity = repository.findBySourceCode(source.getSourceCode());
+		if(entity.isPresent()) {
+			throw new EntityExistsException("Existing entity found for create: " + entity);
+		}
 		return repository.save(source);
 	}
 
@@ -114,6 +119,17 @@ implements SourceService<E, T>, InitializingBean {
 	public Page<Source> retrieve(int pageNum, int pageSize) {
 		log.info("Retrieving a max of {} records for page {}...", pageSize, pageNum);
 		return repository.findAll(PageRequest.of(pageNum, pageSize));
+	}
+
+	@Override
+	public Source update(Source persistable) {
+		//TODO: Add validations
+		var entity = repository.findBySourceCode(persistable.getSourceCode());
+		if(entity.isEmpty()) {
+			throw new EntityNotFoundException("No existing entity found for update: " + persistable.toString());
+		}
+		persistable.setId(entity.get().getId());
+		return repository.save(persistable);
 	}
 
 }

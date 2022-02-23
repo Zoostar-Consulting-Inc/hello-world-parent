@@ -2,36 +2,43 @@
   {
     "id": "1",
     "baseUrl": "source1.zoostarinc.com",
-    "sourceCode": "SOURCE1"
+    "sourceCode": "SOURCE1",
+    "name": "Source One"
   },
   {
     "id": "2",
     "baseUrl": "source2.zoostarinc.com",
-    "sourceCode": "SOURCE2"
+    "sourceCode": "SOURCE2",
+    "name": "Source Two"
   },
   {
     "id": "3",
     "baseUrl": "source3.zoostarinc.com",
-    "sourceCode": "SOURCE3"
+    "sourceCode": "SOURCE3",
+    "name": "Source Three"
   },
   {
     "id": "4",
     "baseUrl": "source4.zoostarinc.com",
-    "sourceCode": "SOURCE4"
+    "sourceCode": "SOURCE4",
+    "name": "Source Four"
   },
   {
     "id": "5",
     "baseUrl": "source5.zoostarinc.com",
-    "sourceCode": "SOURCE5"
+    "sourceCode": "SOURCE5",
+    "name": "Source Five"
   },
   {
     "id": "6",
     "baseUrl": "source6.zoostarinc.com",
-    "sourceCode": "SOURCE6"
+    "sourceCode": "SOURCE6",
+    "name": "Source Six"
   },
   {
     "id": "7",
     "baseUrl": "source7.zoostarinc.com",
-    "sourceCode": "SOURCE7"
+    "sourceCode": "SOURCE7",
+    "name": "Source Seven"
   }
 ]

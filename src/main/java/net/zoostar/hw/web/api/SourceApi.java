@@ -1,5 +1,8 @@
 package net.zoostar.hw.web.api;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+
 import net.zoostar.hw.entity.Source;
 import net.zoostar.hw.entity.SourceEntity;
 import net.zoostar.hw.service.SourceService;
@@ -31,8 +34,15 @@ public class SourceApi<E extends SourceEntity<T>, T> {
 	
 	@PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Source> create(@RequestBody SourceRequest request) {
-		log.info("Request received to create new Source: {}", request);
-		return new ResponseEntity<>(sourceManager.create(request.toEntity()), HttpStatus.CREATED);
+		log.info("Request received to create new entity: {}", request);
+		ResponseEntity<Source> response = null;
+		try {
+			response = new ResponseEntity<>(sourceManager.create(request.toEntity()), HttpStatus.CREATED);
+		} catch(EntityExistsException e) {
+			log.warn(e.getMessage());
+			response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return response;
 	}
 	
 	@GetMapping(path = "/retrieve/{pageNum}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,4 +50,16 @@ public class SourceApi<E extends SourceEntity<T>, T> {
 		return new ResponseEntity<>(new PageResponse<>(sourceManager.retrieve(pageNum, size)), HttpStatus.OK);
 	}
 
+	@PostMapping(path="/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Source> update(@RequestBody SourceRequest request) {
+		log.info("Request received to update existing entity: {}...", request);
+		ResponseEntity<Source> response = null;
+		try {
+			response = new ResponseEntity<>(sourceManager.update(request.toEntity()), HttpStatus.OK);
+		} catch(EntityNotFoundException e) {
+			log.warn(e.getMessage());
+			response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import net.zoostar.hw.AbstractHelloWorldTestHarness;
+import net.zoostar.hw.AbstractMockTestHarness;
 import net.zoostar.hw.entity.Product;
 import net.zoostar.hw.entity.Source;
 import net.zoostar.hw.service.SourceService;
@@ -25,7 +25,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-class ProductApiTest extends AbstractHelloWorldTestHarness<Product, String> {
+class ProductApiTest extends AbstractMockTestHarness<Product, String> {
 	
 	@Autowired
 	protected SourceService<Product, String> sourceManager;
