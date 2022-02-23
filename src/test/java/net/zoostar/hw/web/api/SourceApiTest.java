@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import net.zoostar.hw.AbstractHelloWorldTestHarness;
+import net.zoostar.hw.AbstractMockTestHarness;
 import net.zoostar.hw.entity.Product;
 import net.zoostar.hw.entity.Source;
 import net.zoostar.hw.service.SourceService;
@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-class SourceApiTest extends AbstractHelloWorldTestHarness<Source, String> {
+class SourceApiTest extends AbstractMockTestHarness<Source, String> {
 
 	private static final int PAGE_LIMIT = 3;
 	
@@ -64,6 +64,30 @@ class SourceApiTest extends AbstractHelloWorldTestHarness<Source, String> {
 		
 		var duplicate = actual;
 		assertThat(duplicate).isEqualTo(actual);
+	}
+	
+	@Test
+	void testCreateThrowingEntityExistsException() throws Exception {
+		//given
+		var request = new SourceRequest(toSource("source"));
+		String url = "/api/source/create";
+
+		//mock-when
+		var entity = request.toEntity();
+		entity.setId(UUID.randomUUID().toString());
+		when(sourceRepository.findBySourceCode(request.getSourceCode())).
+				thenReturn(Optional.of(entity));
+		
+		var result = service.perform(MockMvcRequestBuilders.post(url).
+				contentType(MediaType.APPLICATION_JSON).
+				content(mapper.writeValueAsString(request)).
+				accept(MediaType.APPLICATION_JSON)).
+				andReturn();
+		
+		//then
+		assertThat(result).isNotNull();
+		var response = result.getResponse();
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
 	}
 	
 	@Test

@@ -37,7 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
-public abstract class AbstractHelloWorldTestHarness<E extends Persistable<T>, T> {
+public abstract class AbstractMockTestHarness<E extends Persistable<T>, T> {
 
 	protected final Logger log = LoggerFactory.getLogger(this.getClass());
 	
