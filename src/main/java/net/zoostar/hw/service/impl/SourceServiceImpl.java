@@ -9,7 +9,7 @@ import net.zoostar.hw.entity.SourceEntity;
 import net.zoostar.hw.entity.SourceEntityMapper;
 import net.zoostar.hw.repository.SourceRepository;
 import net.zoostar.hw.service.EntityService;
-import net.zoostar.hw.service.SourceService;
+import net.zoostar.hw.service.SourceEntityService;
 import net.zoostar.hw.service.Validator;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional
 public class SourceServiceImpl<E extends SourceEntity<T>, T>
-implements SourceService<E, T>, InitializingBean {
+implements SourceEntityService<E, T>, InitializingBean {
 
     @Autowired
 	protected SourceRepository repository;
