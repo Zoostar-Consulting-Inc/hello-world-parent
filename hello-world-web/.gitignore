@@ -1,7 +1,6 @@
 /.classpath
+/.factorypath
 /.project
-/.springBeans
-/.dbeaver/
 /.settings/
 /logs/
 /target/
