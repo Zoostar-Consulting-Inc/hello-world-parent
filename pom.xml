@@ -11,5 +11,8 @@
 	</parent>
 	<modules>
 		<module>hello-world-web</module>
+		<module>hello-world-batch</module>
+		<module>hello-world-model</module>
+		<module>hello-world-module</module>
 	</modules>
 </project>
