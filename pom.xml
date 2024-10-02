@@ -9,6 +9,16 @@
 	<parent>
 		<groupId>net.zoostar.boot</groupId>
 		<artifactId>zoostar-boot-starter-parent</artifactId>
-		<version>2.2.0</version>
+		<version>2.3.0</version>
 	</parent>
+	<modules>
+		<module>hello-world-api</module>
+	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>net.zoostar.common</groupId>
+			<artifactId>zoostar-common</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+	</dependencies>
 </project>
